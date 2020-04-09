@@ -29,7 +29,7 @@ Here you can find ways to configure your Arch Linux box. For the time being, I h
 The Virtualization Host role sets up Arch Linux to act as a hypervisor and installs the tools for remote management.
 
 # How to install Arch Linux
-From the live media, clone the repository:
+From the live media, clone the repository (internet connection is required):
 
 `git clone git@github.com:binarydevotee/archlinux.git && cd archlinux`
 
