@@ -30,12 +30,15 @@ The Virtualization Host role sets up Arch Linux to act as a hypervisor and insta
 
 # How to install Arch Linux
 From the live media, clone the repository:
+
 `git clone git@github.com:binarydevotee/archlinux.git && cd archlinux`
 
 Specify in which device you want Arch Linux installed, typically '/dev/sda' or '/dev/nvme0n1' on line 8:
+
 `vim installation/<installation-profile>/install.sh`
 
-Launch the file
+Launch the file:
+
 `./installation/<installation-profile>/install.sh`
 
 Once you reboot your system, configure Arch with the contents of the /root directory.
