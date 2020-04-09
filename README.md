@@ -3,6 +3,7 @@ Files to simplify and automate the deployment of my Arch Linux deployments.
 The content of this repo can be found in the following directories:
 
 - installation
+
 Inside the 'installation' directory, there are two installation profiles available for you to use, bare metal and virtual machine.
 The bare metal scripts are designed to be installed on a laptop or desktop, and inside this directory, there are three files:
 
@@ -17,11 +18,13 @@ This scripts installs Arch Linux on an encrypted partition.
 I will soon create a second version of this script to use LUKS + LVM.
 
 - post-install
+
 In this directory you can find script files that will configure Arch Linux once it's installed, such as adding my user, giving it root privileges, set and define timezone and hostname.
 Additioanlly, I am working on scripts to deploy Plasma and Openbox, as these are my desktop environment and window manager of choice.
 This is still not nearly as polished as I want and there's still to be changed here.
 
 - roles
+
 Here you can find ways to configure your Arch Linux box. For the time being, I have only one role, which is a 'virtualization host'.
 The Virtualization Host role sets up Arch Linux to act as a hypervisor and installs the tools for remote management.
 
