@@ -5,7 +5,7 @@
 set -e -u 
 
 # Specify here the storage device where Arch Linux will be installed i.e: /dev/sda
-pv=
+pv=/dev/vda
 
 partition_disk () {
 
@@ -48,22 +48,27 @@ install_archlinux () {
 } # Downloading and installing Arch Linux
 install_archlinux
 
-update_mkinitcpio () {
+generate_fstab () {
+    genfstab -L /mnt >> /mnt/etc/fstab
+} # Creating the 'fstab' file
+generate_fstab
+
+update_initramfs () {
     sed -e '52s/udev/systemd/g' -i /mnt/etc/mkinitcpio.conf 
     arch-chroot /mnt mkinitcpio --allpresets
 } # Replacing 'udev' generated initramfs by 'systemd'                                                                 
-update_mkinitcpio
+update_initramfs
+
+root_passwd () {
+    arch-chroot /mnt passwd
+} # Setting the root password in the chroot environment
+root_passwd
 
 configure_grub () {
     arch-chroot /mnt grub-install $pv
     arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 } # Installing and configuring GRUB on /dev/vda
 configure_grub
-
-root_passwd () {
-    arch-chroot /mnt passwd
-} # Setting the root password in the chroot environment
-root_passwd
 
 default_services () {
     arch-chroot /mnt systemctl enable NetworkManager sshd
