@@ -99,7 +99,7 @@ bootloader() {
     loader_conf
 
     entries_conf () {
-        dm_crypt_uuid="$(blkid /dev/disk/by-partlabel/ARCH_OS --match-tag UUID --output value)"
+        dm_crypt_uuid="$(blkid /dev/disk/by-partlabel/CRYPT_ROOT --match-tag UUID --output value)"
         printf '%s\n' > /mnt/boot/loader/entries/arch.conf \
         'title   Arch Linux' \
         'linux   /vmlinuz-linux' \
