@@ -16,7 +16,7 @@ wipe_disk
 partition_disk () {
     
     # This function uses parted to partition the main block disk and set the correct flags
-    # It creates three partitions: 1 x 300MiB Boot Partition | 1 x 221GiB Linux Filesystem | 1 x 100% SWAP
+    # It creates three partitions: 1 x 300MiB Boot Partition | 1 x 221GiB Linux Filesystem | 1 x 100% FREE SWAP
 
     parted --script $pv \
     mklabel gpt \
@@ -33,7 +33,7 @@ partition_disk () {
     
 }
 partition_disk
-    
+
 format_partitions () {
 
     # This function formats, labels, and mounts the required partitions

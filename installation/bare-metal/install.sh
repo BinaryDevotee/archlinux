@@ -5,7 +5,8 @@
 set -e -u
 
 # Specify here the storage device where Arch Linux will be installed i.e: /dev/sda
-pv=
+echo "" && lsblk && echo ""
+read -p "Specify the block device for the installation [i.e: /dev/sda]: " pv
 
 wipe_disk () {
     wipefs --all --force $pv && blkdiscard $pv
@@ -23,13 +24,13 @@ partition_disk () {
     mkpart primary 301MiB 100% \
     name 1 ARCH_BOOT \
     name 2 ARCH_OS \
-    set 1 esp on \
+    set 1 boot on \
     align-check optimal 1 \
     align-check optimal 2
     
 }
 partition_disk
-    
+
 format_partitions () {
 
     # This function formats, labels, and mounts the required partitions
@@ -54,17 +55,27 @@ setup_mirrors () {
 setup_mirrors
 
 install_archlinux () {
-    pacstrap /mnt base base-devel linux linux-firmware intel-ucode vi vim networkmanager openssh xfsprogs
+    pacstrap /mnt base base-devel linux linux-firmware intel-ucode vim networkmanager openssh xfsprogs
 } # Downloading and installing Arch Linux
 install_archlinux
 
-update_mkinitcpio () {
+generate_fstab () {
+    genfstab -L /mnt >> /mnt/etc/fstab
+} # Creating the 'fstab' file
+generate_fstab
+
+update_initramfs () {
     sed -e '52s/udev/systemd/g' -i /mnt/etc/mkinitcpio.conf
     arch-chroot /mnt mkinitcpio --allpresets
 } # Replacing 'udev' generated initramfs by 'systemd'
-update_mkinitcpio
+update_initramfs
 
-bootloader() {
+root_passwd () {
+    arch-chroot /mnt passwd
+} # Setting the root password in the chroot environment
+root_passwd
+
+bootloader () {
 
     install_bootloader () {
         arch-chroot /mnt bootctl --path=/boot install
@@ -86,7 +97,7 @@ bootloader() {
         'linux   /vmlinuz-linux' \
         'initrd  /intel-ucode.img' \
         'initrd  /initramfs-linux.img' \
-        'options root=LABEL=ARCH_OS rw intel_iommu=on'
+        'options root=LABEL=ARCH_OS rw'
     } # Populating the arch.conf file
     entries_conf
 
@@ -97,11 +108,6 @@ bootloader() {
 
 }
 bootloader
-
-root_passwd () {
-    arch-chroot /mnt passwd
-} # Setting the root password in the chroot environment
-root_passwd
 
 default_services () {
     arch-chroot /mnt systemctl enable NetworkManager sshd
