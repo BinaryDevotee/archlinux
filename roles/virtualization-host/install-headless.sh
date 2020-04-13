@@ -5,7 +5,7 @@ set -e -u
 
 load_modules () {
     echo 'fuse' >> /etc/modules-load.d/fuse.conf
-    echo 'options intel_iommu=on' >> /boot/loader/entries/*.conf
+    echo 'options intel_iommu=soft' >> /boot/loader/entries/*.conf
 }
 
 install_pkgs () {
@@ -18,13 +18,13 @@ install_pkgs () {
     user_name=$USER
 
     pacman -Sy --needed --noconfirm libvirt \
-    qemu \
+    qemu-headless \
     ebtables \
     dnsmasq \
     bridge-utils \
     openbsd-netcat \
     dmidecode \
-    virt-manager
+    virt-install
 
     usermod -a -G libvirt $user_name
     systemctl enable --now libvirtd
@@ -34,8 +34,8 @@ echo 'Installing the required packages'
 
 configure_kvm_pools () {
 
-    img_path=$HOME/VirtualMachines/images
-    iso_path=$HOME/VirtualMachines/iso
+    img_path=/data/VirtualMachines/images
+    iso_path=/data/VirtualMachines/iso
 
     # This function creates the additional storage pools that we will use in this host.
 
