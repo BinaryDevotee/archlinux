@@ -5,7 +5,8 @@
 set -e -u
 
 # Specify here the storage device where Arch Linux will be installed i.e: /dev/sda
-pv=
+echo "" && lsblk && echo ""
+read -p "Specify the block device for the installation [i.e: /dev/sda]: " pv
 
 wipe_disk () {
     wipefs --all --force $pv && blkdiscard $pv
@@ -22,7 +23,7 @@ partition_disk () {
     mkpart primary 1MiB 301MiB \
     mkpart primary 301MiB 100% \
     name 1 ARCH_BOOT \
-    name 2 ARCH_OS \
+    name 2 CRYPT_ROOT \
     set 1 esp on \
     align-check optimal 1 \
     align-check optimal 2
@@ -39,15 +40,15 @@ encrypt_partitions () {
     mkfs.fat -F32 /dev/disk/by-partlabel/ARCH_BOOT -n ARCH_BOOT
     
     # Creating the encrypted device on partition 2	
-    cryptsetup --verbose --batch-mode --verify-passphrase luksFormat /dev/disk/by-partlabel/ARCH_OS --label CRYPT_ROOT
-    cryptsetup luksOpen /dev/disk/by-partlabel/ARCH_OS CRYPT_ROOT
+    cryptsetup --verbose --batch-mode --verify-passphrase luksFormat /dev/disk/by-partlabel/CRYPT_ROOT --label CRYPT_ROOT
+    cryptsetup luksOpen /dev/disk/by-partlabel/CRYPT_ROOT CRYPT_ROOT
     
     # Formatting and labeling the encrypted device
     mkfs.xfs -f /dev/mapper/CRYPT_ROOT -L ARCH_OS
 
     # Mounting partitions
     mount --label ARCH_OS /mnt && mkdir -p /mnt/boot
-    mount /dev/disk/by-partlabel/ARCH_BOOT /mnt/boot
+    mount --label ARCH_BOOT /mnt/boot
 
 }
 encrypt_partitions
@@ -64,12 +65,22 @@ install_archlinux () {
 } # Downloading and installing Arch Linux
 install_archlinux
 
-update_mkinitcpio () {
+generate_fstab () {
+	    genfstab -L /mnt >> /mnt/etc/fstab
+    } # Creating the 'fstab' file
+generate_fstab
+
+update_initramfs () {
     hooks='base systemd autodetect keyboard modconf block sd-encrypt filesystems fsck'
     sed -e "52s/^.*/HOOKS=($hooks)/g" -i /mnt/etc/mkinitcpio.conf
     arch-chroot /mnt mkinitcpio --allpresets
 } # Adding hooks for the encrypted device
-update_mkinitcpio
+update_initramfs
+
+root_passwd () {
+    arch-chroot /mnt passwd
+} # Setting the root password in the chroot environment
+root_passwd
 
 bootloader() {
 
@@ -94,7 +105,7 @@ bootloader() {
         'linux   /vmlinuz-linux' \
         'initrd  /intel-ucode.img' \
         'initrd  /initramfs-linux.img' \
-        'options luks.name='$dm_crypt_uuid'=ARCH_OS root=/dev/mapper/ARCH_OS rw intel_iommu=on'
+        'options luks.name='$dm_crypt_uuid'=ARCH_OS root=/dev/mapper/ARCH_OS rw'
     } # Populating the arch.conf file
     entries_conf
 
@@ -105,11 +116,6 @@ bootloader() {
 
 }
 bootloader
-
-root_passwd () {
-    arch-chroot /mnt passwd
-} # Setting the root password in the chroot environment
-root_passwd
 
 default_services () {
     arch-chroot /mnt systemctl enable NetworkManager sshd
