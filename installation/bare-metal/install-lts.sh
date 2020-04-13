@@ -5,8 +5,7 @@
 set -e -u
 
 # Specify here the storage device where Arch Linux will be installed i.e: /dev/sda
-echo "" && lsblk && echo ""
-read -p "Specify the block device for the installation [i.e: /dev/sda]: " pv
+pv='/dev/sda'
 
 wipe_disk () {
     wipefs --all --force $pv && blkdiscard $pv
@@ -102,7 +101,8 @@ bootloader () {
         'linux   /vmlinuz-linux-lts' \
         'initrd  /intel-ucode.img' \
         'initrd  /initramfs-linux-lts.img' \
-        'options root=LABEL=ARCH_OS rw'
+        'options root=LABEL=ARCH_OS rw' \
+	'options intel_iommu=soft'
     } # Populating the arch.conf file
     entries_conf
 

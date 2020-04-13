@@ -3,10 +3,10 @@
 
 set -e -u
 
-user_id=
-user_name=
-group_name=
-host_name=
+user_id='113832'
+user_name='atrodrig'
+group_name='atrodrig'
+host_name='atrodrig-t520'
 
 add_user () {
     groupadd -g $user_id $group_name
@@ -38,6 +38,12 @@ config_locale () {
 }
 echo 'Defining locale settings'
 config_locale
+
+create_dir () {
+    mkdir /data /backup
+    chown $user_name:$user_name /data /backup
+}
+create_dir
 
 system_reboot () {
     systemctl reboot

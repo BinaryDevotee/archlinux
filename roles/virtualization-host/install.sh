@@ -3,10 +3,9 @@
 
 set -e -u
 
-load_modules () {
+fuse_load () {
     echo 'fuse' >> /etc/modules-load.d/fuse.conf
-    echo 'options intel_iommu=on' >> /boot/loader/entries/*.conf
-}
+} # Loading the 'fuse' kernel module
 
 install_pkgs () {
 
@@ -15,16 +14,16 @@ install_pkgs () {
     # Packages 'demidecode' is required by libvirt.
     # Install the package 'virt-install' to manage libvirt using the GUI.
 
-    user_name=$USER
+    user_name='atrodrig'
 
     pacman -Sy --needed --noconfirm libvirt \
-    qemu \
+    qemu-headless \
     ebtables \
     dnsmasq \
     bridge-utils \
     openbsd-netcat \
     dmidecode \
-    virt-manager
+    virt-install
 
     usermod -a -G libvirt $user_name
     systemctl enable --now libvirtd
@@ -34,8 +33,8 @@ echo 'Installing the required packages'
 
 configure_kvm_pools () {
 
-    img_path=$HOME/VirtualMachines/images
-    iso_path=$HOME/VirtualMachines/iso
+    img_path=/data/VirtualMachines/images
+    iso_path=/data/VirtualMachines/iso
 
     # This function creates the additional storage pools that we will use in this host.
 
@@ -71,7 +70,7 @@ start_default_network () {
 }
 echo 'Starting and enabling the default network'
 
-load_modules
+fuse_load
 install_pkgs
 configure_kvm_pools
 start_default_network
