@@ -23,7 +23,7 @@ install_pkgs () {
     dnsmasq \
     bridge-utils \
     openbsd-netcat \
-    demidecode \
+    dmidecode \
     virt-install
 
     usermod -a -G libvirt $user_name
