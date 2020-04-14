@@ -5,7 +5,7 @@
 set -e -u 
 
 # Specify here the storage device where Arch Linux will be installed i.e: /dev/sda
-pv=/dev/vda
+pv='/dev/vda'
 
 partition_disk () {
 
