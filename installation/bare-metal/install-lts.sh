@@ -12,7 +12,7 @@ wipe_disk () {
     wipefs --all --force $pv && blkdiscard $pv
 } # Wiping and discarding blocks on $pv
 wipe_disk
-    
+
 partition_disk () {
     
     # This function uses parted to partition the main block disk and set the correct flags
@@ -102,7 +102,8 @@ bootloader () {
         'linux   /vmlinuz-linux-lts' \
         'initrd  /intel-ucode.img' \
         'initrd  /initramfs-linux-lts.img' \
-        'options root=LABEL=ARCH_OS rw'
+        'options root=LABEL=ARCH_OS rw' \
+	'options intel_iommu=soft'
     } # Populating the arch.conf file
     entries_conf
 

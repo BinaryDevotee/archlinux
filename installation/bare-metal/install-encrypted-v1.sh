@@ -24,7 +24,7 @@ partition_disk () {
     mkpart primary 301MiB 100% \
     name 1 ARCH_BOOT \
     name 2 CRYPT_ROOT \
-    set 1 esp on \
+    set 1 boot on \
     align-check optimal 1 \
     align-check optimal 2
     
@@ -35,7 +35,7 @@ encrypt_partitions () {
 
     # This function creates the encrypted device, formats, labels, and mounts the required partitions
     # Partition 1: Unencrypted FAT32 - ARCH_BOOT | Partition 2: Encrypted XFS on CRYPT_ROOT - ARCH_OS
-    
+
     # Formatting and labeling partition 1
     mkfs.fat -F32 /dev/disk/by-partlabel/ARCH_BOOT -n ARCH_BOOT
     
@@ -47,7 +47,7 @@ encrypt_partitions () {
     mkfs.xfs -f /dev/mapper/CRYPT_ROOT -L ARCH_OS
 
     # Mounting partitions
-    mount --label ARCH_OS /mnt && mkdir -p /mnt/boot
+    mount --label ARCH_OS /mnt && mkdir --parents /mnt/boot
     mount --label ARCH_BOOT /mnt/boot
 
 }
@@ -61,13 +61,13 @@ setup_mirrors () {
 setup_mirrors
 
 install_archlinux () {
-    pacstrap /mnt base base-devel linux linux-firmware intel-ucode vi vim networkmanager openssh xfsprogs
+    pacstrap /mnt base base-devel linux linux-firmware intel-ucode vim networkmanager openssh xfsprogs
 } # Downloading and installing Arch Linux
 install_archlinux
 
 generate_fstab () {
-	    genfstab -L /mnt >> /mnt/etc/fstab
-    } # Creating the 'fstab' file
+    genfstab -L /mnt >> /mnt/etc/fstab
+} # Creating the 'fstab' file
 generate_fstab
 
 update_initramfs () {
@@ -82,7 +82,7 @@ root_passwd () {
 } # Setting the root password in the chroot environment
 root_passwd
 
-bootloader() {
+bootloader () {
 
     install_bootloader () {
         arch-chroot /mnt bootctl --path=/boot install
@@ -105,7 +105,8 @@ bootloader() {
         'linux   /vmlinuz-linux' \
         'initrd  /intel-ucode.img' \
         'initrd  /initramfs-linux.img' \
-        'options luks.name='$dm_crypt_uuid'=ARCH_OS root=/dev/mapper/ARCH_OS rw'
+        'options luks.name='$dm_crypt_uuid'=ARCH_OS root=/dev/mapper/ARCH_OS rw' \
+	'options intel_iommu=on'
     } # Populating the arch.conf file
     entries_conf
 

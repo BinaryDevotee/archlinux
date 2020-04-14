@@ -36,7 +36,7 @@ format_partitions () {
     # This function formats, labels, and mounts the required partitions
     # Partition 1: FAT32 - ARCH_BOOT | Partition 2: XFS - ARCH_OS
 
-    # Formatting  and labeling partitions
+    # Formatting and labeling partitions
     mkfs.fat -F32 /dev/disk/by-partlabel/ARCH_BOOT -n ARCH_BOOT
     mkfs.xfs -f   /dev/disk/by-partlabel/ARCH_OS   -L ARCH_OS
 
@@ -97,7 +97,8 @@ bootloader () {
         'linux   /vmlinuz-linux' \
         'initrd  /intel-ucode.img' \
         'initrd  /initramfs-linux.img' \
-        'options root=LABEL=ARCH_OS rw'
+        'options root=LABEL=ARCH_OS rw' \
+	'options intel_iommu=on'
     } # Populating the arch.conf file
     entries_conf
 
