@@ -3,10 +3,10 @@
 
 set -e -u
 
-user_id=
-user_name=
-group_name=
-host_name=
+user_id=''
+user_name=''
+group_name=''
+host_name=''
 
 add_user () {
     groupadd -g $user_id $group_name
