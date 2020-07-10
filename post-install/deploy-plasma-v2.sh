@@ -20,6 +20,7 @@ deploy_plasma () {
 deploy_plasma
 
 configure_sddm () {
+    mkdir -p /etc/sddm.conf.d
     printf '%s\n' > /etc/sddm.conf.d/uid.conf \
     '[Users]' \
     'MaximumUid=113832' \
