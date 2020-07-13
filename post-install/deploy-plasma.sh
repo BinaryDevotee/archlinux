@@ -1,4 +1,36 @@
-pacman -Sy --needed --noconfirm xorg &&
-pacman -Sy --needed --noconfirm plasma dolphin konsole &&
-sddm --example-config | tee /etc/sddm.conf > /dev/null 2>&1
+#!/bin/bash
+# Basic Arch Linux installation script to install and configure X.org, and install the Plasma Desktop Environment
+
+set -e -u
+source files/vars
+
+deploy_xorg () {
+    pacman --sync --refresh --needed --noconfirm xorg-server
+}
+deploy_xorg
+
+deploy_proprietary_drivers () {
+    pacman --sync --refresh --needed --noconfirm xf86-video-intel vulkan-intel
+}
+deploy_proprietary_drivers
+
+deploy_plasma () {
+    pacman --sync --refresh --needed --noconfirm plasma-meta qt5-virtualkeyboard dolphin konsole
+}
+deploy_plasma
+
+configure_sddm () {
+    mkdir -p /etc/sddm.conf.d
+    printf '%s\n' > /etc/sddm.conf.d/uid.conf \
+    "[Users]" \
+    "MaximumUid=$user_id" \
+    "MinimumUid=$user_id"
+}
+configure_sddm
+
+enable_sddm () {
+    systemctl enable sddm
+}
+enable_sddm
+ 
 systemctl reboot

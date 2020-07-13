@@ -2,11 +2,7 @@
 # Arch Linux basic system configuration script
 
 set -e -u
-
-user_id=''
-user_name=''
-group_name=''
-host_name=''
+source files/vars
 
 add_user () {
     groupadd -g $user_id $group_name

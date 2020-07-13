@@ -1,0 +1,27 @@
+
+# files/vars: variables file
+#
+# This file is used to set the variables for the system to be configured
+#
+
+user_id='113832'
+user_name='atrodrig'
+group_name='atrodrig'
+host_name='example'
+
+pkg_list='
+  bat
+  chromium
+  git
+  htop
+  keychain
+  neofetch
+  neovim
+  nfs-utils
+  openvpn
+  tmux
+  wget
+  zsh
+  zsh-autosuggestions
+  zsh-completions
+  zsh-syntax-highlighting'
