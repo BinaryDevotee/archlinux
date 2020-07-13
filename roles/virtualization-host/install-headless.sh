@@ -2,6 +2,7 @@
 # This script installs and configures libvirt packages (KVM+QEMU) to enable this host to act as a hypervisor
 
 set -e -u
+source ../../post-install/files/vars
 
 load_modules () {
     echo 'fuse' >> /etc/modules-load.d/fuse.conf
@@ -15,9 +16,7 @@ install_pkgs () {
     # Packages 'demidecode' is required by libvirt.
     # Install the package 'virt-install' to manage libvirt using the GUI.
 
-    user_name=$USER
-
-    pacman -Sy --needed --noconfirm libvirt \
+    pacman --sync --refresh --needed --noconfirm libvirt \
     qemu-headless \
     ebtables \
     dnsmasq \
