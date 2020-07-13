@@ -36,13 +36,6 @@ format_partitions () {
 }
 format_partitions
 
-setup_mirrors () {
-    mirrorlist='https://www.archlinux.org/mirrorlist/?country=CZ&country=DE'
-    curl $mirrorlist -o /etc/pacman.d/mirrorlist
-    sed -e 's/#Server/Server/g' -i /etc/pacman.d/mirrorlist
-} # Downloading and formatting the latest mirrorlist file Czechia and Germany
-# setup_mirrors
-
 install_archlinux () {
     pacstrap /mnt base base-devel linux linux-firmware vim dhcpcd openssh xfsprogs grub
 } # Downloading and installing Arch Linux
