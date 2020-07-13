@@ -41,10 +41,10 @@ setup_mirrors () {
     curl $mirrorlist -o /etc/pacman.d/mirrorlist
     sed -e 's/#Server/Server/g' -i /etc/pacman.d/mirrorlist
 } # Downloading and formatting the latest mirrorlist file Czechia and Germany
-setup_mirrors
+# setup_mirrors
 
 install_archlinux () {
-    pacstrap /mnt base base-devel linux linux-firmware vi vim networkmanager openssh xfsprogs grub
+    pacstrap /mnt base base-devel linux linux-firmware vim dhcpcd openssh xfsprogs grub
 } # Downloading and installing Arch Linux
 install_archlinux
 
@@ -71,7 +71,7 @@ configure_grub () {
 configure_grub
 
 default_services () {
-    arch-chroot /mnt systemctl enable NetworkManager sshd
+    arch-chroot /mnt systemctl enable dhcpcd sshd
 } # Enabling NetworkManager and OpenSSH services
 default_services
 
