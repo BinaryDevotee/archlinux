@@ -1,13 +1,13 @@
 #!/bin/bash
 # This script installs and configures libvirt packages (KVM+QEMU) to enable this host to act as a hypervisor
 
-set -e -u
 source ../../post-install/files/vars
 
 load_modules () {
-    echo 'fuse' >> /etc/modules-load.d/fuse.conf
+    echo 'fuse' > /etc/modules-load.d/fuse.conf
     echo 'options intel_iommu=soft' >> /boot/loader/entries/*.conf
 }
+load_modules
 
 install_pkgs () {
 
@@ -29,18 +29,26 @@ install_pkgs () {
     systemctl enable --now libvirtd
 
 }
-echo 'Installing the required packages'
+install_pkgs
 
-configure_kvm_pools () {
+delete_kvm_pools () {
+
+    # Remove the default pool
+    virsh pool-destroy default
+    virsh pool-undefine default
+
+    # Remove the iso pool
+    virsh pool-destroy iso
+    virsh pool-undefine iso
+}
+delete_kvm_pools
+
+create_kvm_pools () {
 
     img_path=/data/VirtualMachines/images
     iso_path=/data/VirtualMachines/iso
 
     # This function creates the additional storage pools that we will use in this host.
-
-    # Remove the default pool
-    virsh pool-destroy default
-    virsh pool-undefine default
 
     # Create the storage pools definition
     virsh pool-define-as --name default --type dir --target $img_path
@@ -50,16 +58,21 @@ configure_kvm_pools () {
     virsh pool-build default
     virsh pool-build iso
 
+}
+create_kvm_pools
+
+start_kvm_pools () {
+
     # Start the storage pools
     virsh pool-start default
     virsh pool-start iso
-
+ 
     # Turn on autostart
     virsh pool-autostart default
     virsh pool-autostart iso
 
 }
-echo 'Configuring storage pools'
+start_kvm_pools
 
 start_default_network () {
     
@@ -68,9 +81,4 @@ start_default_network () {
     virsh net-start default
 
 }
-echo 'Starting and enabling the default network'
-
-load_modules
-install_pkgs
-configure_kvm_pools
 start_default_network
