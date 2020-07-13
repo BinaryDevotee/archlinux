@@ -35,6 +35,16 @@ config_locale () {
 echo 'Defining locale settings'
 config_locale
 
+create_dirs () {
+    mkdir -p /data/Documents
+    mkdir -p /data/Music
+    mkdir -p /data/Pictures
+    mkdir -p /data/Videos
+
+    chown -R $user_name:$user_name /data
+}
+create_dirs
+
 system_reboot () {
     systemctl reboot
 }
