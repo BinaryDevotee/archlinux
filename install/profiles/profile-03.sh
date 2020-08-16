@@ -94,7 +94,7 @@ bootloader () {
 bootloader
 
 ps_scripts () {
-    cp -r ../../post-install /mnt/root
+    cp -r ../post-install /mnt/root
     cp -r ../../roles /mnt/root
 }
 ps_scripts
