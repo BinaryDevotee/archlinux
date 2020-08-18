@@ -9,10 +9,10 @@ deploy_xorg () {
 }
 deploy_xorg
 
-deploy_proprietary_drivers () {
-    pacman --sync --refresh --needed --noconfirm xf86-video-intel vulkan-intel
+install_drivers () {
+    pacman --sync --refresh --needed --noconfirm xf86-video-intel vulkan-intel libva-intel-driver libva-mesa-driver
 }
-deploy_proprietary_drivers
+install_drivers
 
 deploy_plasma () {
     pacman --sync --refresh --needed --noconfirm plasma-meta qt5-virtualkeyboard dolphin konsole

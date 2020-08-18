@@ -15,6 +15,7 @@ pkg_list='
   git
   htop
   keychain
+  libva-utils
   neofetch
   neovim
   nfs-utils
