@@ -18,6 +18,8 @@ pkg_list='
   neofetch
   neovim
   nfs-utils
+  noto-fonts
+  noto-fonts-emoji
   openvpn
   tmux
   wget
