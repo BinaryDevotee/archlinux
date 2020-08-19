@@ -10,7 +10,7 @@ deploy_xorg () {
 deploy_xorg
 
 install_drivers () {
-    pacman --sync --refresh --needed --noconfirm xf86-video-intel vulkan-intel libva-intel-driver libva-mesa-driver
+    pacman --sync --refresh --needed --noconfirm xf86-video-intel vulkan-intel
 }
 install_drivers
 

@@ -9,12 +9,17 @@ user_name='atrodrig'
 group_name='atrodrig'
 host_name='atrodrig-t470s'
 
+img_path='/data/VirtualMachines/images'
+iso_path='/data/VirtualMachines/iso'
+
 pkg_list='
   bat
   chromium
   git
   htop
   keychain
+  libva-intel-driver
+  libva-mesa-driver
   libva-utils
   neofetch
   neovim
@@ -23,6 +28,7 @@ pkg_list='
   noto-fonts-emoji
   openvpn
   tmux
+  ufw
   wget
   zsh
   zsh-autosuggestions
