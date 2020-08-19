@@ -9,7 +9,7 @@ echo "Available block devices:" && echo "" && lsblk && echo ""
 read -p "Specify the block device for the installation [i.e: /dev/sda]: " pv
 
 wipe_disk () {
-    wipefs --all --force $pv && blkdiscard $pv
+    wipefs --all --force $pv && blkdiscard --force $pv
 }
 wipe_disk
 
@@ -26,6 +26,8 @@ partition_disk () {
     align-check optimal 1 \
     align-check optimal 2 \
     align-check optimal 3
+
+    udevadm settle && sync
 }
 partition_disk
 

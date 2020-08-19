@@ -16,6 +16,8 @@ partition_disk () {
     set 1 bios_grub on \
     align-check optimal 1 \
     align-check optimal 2
+
+    udevadm settle && sync
 }
 partition_disk
 
