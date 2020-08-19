@@ -28,6 +28,11 @@ starship_install () {
 echo 'Installing Starship Cross-Shell'
 starship_install
 
+start_ufw () {
+    ufw enable
+}
+start_ufw
+
 set_alias () {
     cat files/alias >> /home/$user_name/.zshrc.local
 }
