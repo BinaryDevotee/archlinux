@@ -15,16 +15,16 @@ install_drivers () {
 install_drivers
 
 deploy_plasma () {
-    pacman --sync --refresh --needed --noconfirm plasma-meta qt5-virtualkeyboard dolphin konsole
+    pacman --sync --refresh --needed --noconfirm plasma-meta qt5-virtualkeyboard packagekit-qt5 dolphin konsole
 }
 deploy_plasma
 
 configure_sddm () {
     mkdir -p /etc/sddm.conf.d
     printf '%s\n' > /etc/sddm.conf.d/uid.conf \
-    "[Users]" \
-    "MaximumUid=$user_id" \
-    "MinimumUid=$user_id"
+        "[Users]" \
+        "MaximumUid=$user_id" \
+        "MinimumUid=$user_id"
 }
 configure_sddm
 
