@@ -1,6 +1,12 @@
 #!/bin/bash
 # This script installs and configures libvirt packages (KVM+QEMU) to enable this host to act as a hypervisor
 
+if [ $(whoami) != 'root' ]
+  then
+    echo "You must be root to do this."
+    exit
+fi
+
 source ../../post-install/files/vars
 
 load_modules () {
