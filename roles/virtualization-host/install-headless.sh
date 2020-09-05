@@ -10,12 +10,6 @@ load_modules () {
 load_modules
 
 install_pkgs () {
-
-    # This function installs the required packages for libvirt KVM+QEMU to work.
-    # Packages 'ebtables', 'dnsmasq', 'bridge-utils', and 'openbsd-netcat' are necessary for remote administration.
-    # Packages 'demidecode' is required by libvirt.
-    # Install the package 'virt-install' to manage libvirt using the GUI.
-
     pacman --sync --refresh --needed --noconfirm libvirt \
     qemu-headless \
     ebtables \
@@ -32,53 +26,33 @@ install_pkgs () {
 install_pkgs
 
 delete_kvm_pools () {
-
-    # Remove the default pool
     virsh pool-destroy default
     virsh pool-undefine default
-
-    # Remove the iso pool
-    virsh pool-destroy iso
-    virsh pool-undefine iso
 }
 delete_kvm_pools
 
 create_kvm_pools () {
-
-    img_path=/data/VirtualMachines/images
-    iso_path=/data/VirtualMachines/iso
-
-    # This function creates the additional storage pools that we will use in this host.
-
     # Create the storage pools definition
     virsh pool-define-as --name default --type dir --target $img_path
     virsh pool-define-as --name iso --type dir --target $iso_path
-
     # Create the local directories
     virsh pool-build default
     virsh pool-build iso
-
 }
 create_kvm_pools
 
 start_kvm_pools () {
-
     # Start the storage pools
     virsh pool-start default
     virsh pool-start iso
- 
     # Turn on autostart
     virsh pool-autostart default
     virsh pool-autostart iso
-
 }
 start_kvm_pools
 
 start_default_network () {
-    
-    # This function enables and starts the default network.
     virsh net-autostart default
     virsh net-start default
-
 }
 start_default_network
