@@ -25,6 +25,7 @@ pkg_list='
   neovim
   nfs-utils
   noto-fonts
+  noto-fonts-cjk
   noto-fonts-emoji
   openvpn
   tmux
