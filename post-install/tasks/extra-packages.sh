@@ -38,7 +38,7 @@ config_ufw () {
 config_ufw
 
 set_alias () {
-    cat files/alias >> /home/$user_name/.zshrc.local
+    cat ../files/alias >> /home/$user_name/.zshrc.local
 }
 echo 'Creating aliases on ~/.zshrc.local'
 set_alias
