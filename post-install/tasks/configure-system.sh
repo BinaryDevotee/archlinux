@@ -43,5 +43,3 @@ create_dirs () {
     chown -R $user_name:$user_name /data
 }
 create_dirs
-
-# systemctl reboot

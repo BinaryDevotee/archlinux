@@ -23,7 +23,6 @@ pkg_list='
   libva-utils
   neofetch
   nfs-utils
-  noto-fonts
   noto-fonts-cjk
   noto-fonts-emoji
   openvpn

@@ -11,12 +11,13 @@ echo 'Installing additional packages'
 pkg_install
 
 zsh_config () {
-    homectl with $user_name
+    homectl activate $user_name
     wget -q -O /home/$user_name/.zshrc       https://git.grml.org/f/grml-etc-core/etc/zsh/zshrc
     wget -q -O /home/$user_name/.zshrc.local https://git.grml.org/f/grml-etc-core/etc/skel/.zshrc
     chown $user_name:$user_name /home/$user_name/.zshrc
     chown $user_name:$user_name /home/$user_name/.zshrc.local
     homectl update $user_name --shell=/usr/bin/zsh
+    homectl deactivate $user_name
 }
 echo 'Downloading ZSH profiles from https://grml.org/zsh/'
 zsh_config
