@@ -66,7 +66,7 @@ bootloader () {
     loader_conf () {
         printf '%s\n' > /mnt/boot/loader/loader.conf \
         'default arch' \
-        'timeout 3' \
+        'timeout 0' \
         'console-mode keep' \
         'editor no'
     }
@@ -99,6 +99,7 @@ ps_scripts
 enable_services () {
     systemctl enable systemd-homed
 }
+enable_services
 
 finish_install () {
     umount -R /mnt

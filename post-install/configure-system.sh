@@ -8,17 +8,17 @@ add_user () {
 #   groupadd -g $user_id $group_name
 #   useradd -m -u $user_id $user_name -g $group_name
 #   passwd $user_name
-    homectl create $user_name -u $user_id
+    homectl create $user_name --uid $user_id --member-of=wheel
 }
 echo 'Creating and configuring user'
 add_user
 
-config_user_privileges () {
-    echo '%wheel ALL=(ALL) ALL' > /etc/sudoers.d/$user_name
-    usermod -a -G wheel $user_name
-}
-echo 'Configuring user privileges'
-config_user_privileges
+#config_user_privileges () {
+#    echo '%wheel ALL=(ALL) ALL' > /etc/sudoers.d/$user_name
+#    usermod -a -G wheel $user_name
+#}
+#echo 'Configuring user privileges'
+#config_user_privileges
 
 system_setup () {
     hostnamectl set-hostname $host_name
@@ -46,7 +46,4 @@ create_dirs () {
 }
 create_dirs
 
-system_reboot () {
-    systemctl reboot
-}
-system_reboot
+systemctl reboot

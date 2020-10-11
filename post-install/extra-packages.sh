@@ -13,9 +13,9 @@ pkg_install
 zsh_config () {
     wget -q -O /home/$user_name/.zshrc       https://git.grml.org/f/grml-etc-core/etc/zsh/zshrc
     wget -q -O /home/$user_name/.zshrc.local https://git.grml.org/f/grml-etc-core/etc/skel/.zshrc
-    chsh --shell /usr/bin/zsh $user_name
     chown $user_name:$user_name /home/$user_name/.zshrc
     chown $user_name:$user_name /home/$user_name/.zshrc.local
+    homectl update $user_name --shell=/usr/bin/zsh
 }
 echo 'Downloading ZSH profiles from https://grml.org/zsh/'
 zsh_config
