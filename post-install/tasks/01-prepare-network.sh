@@ -1,54 +1,45 @@
 #!/bin/bash
-# Arch Linux basic network configuration script
 
 set -e -u
 
-dhcp_wired_config () {
-    printf '%s\n' > /etc/systemd/network/20-wired.network \
-    '[Match]' \
-    'Name=enp*' \
-    '' \
-    '[Network]' \
-    'DHCP=yes'
-}
-dhcp_wired_config
+echo 'Enabling DHCP on all wired interfaces'
+cat <<EOF > /etc/systemd/network/20-wired.network
+[Match]
+Name=enp*
 
-dhcp_wireless_config () {
-    printf '%s\n' > /etc/systemd/network/25-wireless.network \
-    '[Match]' \
-    'Name=wlan*' \
-    '' \
-    '[Network]' \
-    'DHCP=yes'
-}
-dhcp_wireless_config
+[Network]
+DHCP=yes
+EOF
+sleep 1
 
-nm_iw () {
-    printf '%s\n' > /etc/NetworkManager/conf.d/wifi_backend.conf \
-    '[device]' \
-    'wifi.backend=iwd'
-}
-nm_iw
+echo 'Enabling DHCP on all wireless interfaces'
+cat <<EOF > /etc/systemd/network/25-wireless.network \
+[Match]
+Name=wlan*
 
-set_dns_mgr () {
-    mkdir -p /etc/iwd
-    printf '%s\n' > /etc/iwd/main.conf \
-    '[Network]' \
-    'NameResolvingService=systemd'
-}
-set_dns_mgr
+[Network]
+DHCP=yes
+EOF
+sleep 1
 
-enable_net_services () {
-    systemctl enable --now systemd-networkd \
-        systemd-resolved \
-        NetworkManager \
-        iwd
-}
-enable_net_services
+echo 'Adding iwd as NetworkManager backend'
+cat <<EOF > /etc/NetworkManager/conf.d/wifi_backend.conf \
+[device]
+wifi.backend=iwd
+EOF
+sleep 1
 
-wifi_connect () {
-    echo "Available Wireless networks:" && echo "" && nmcli device wifi && echo ""
-    read -p "Type the SSID to connect: " ssid
-    nmcli device wifi connect $ssid --ask
-}
-wifi_connect
+mkdir -p /etc/iwd
+
+echo 'Selecting systemd-resolved as the DNS manager'
+cat <<EOF > /etc/iwd/main.conf \
+[Network]
+NameResolvingService=systemd
+EOF
+sleep 1
+
+systemctl enable --now systemd-networkd systemd-resolved NetworkManager iwd
+
+echo "Available Wireless networks:" && echo "" && nmcli device wifi && echo "" && sleep 5
+read -p "Type the SSID to connect: " ssid
+nmcli device wifi connect $ssid --ask
