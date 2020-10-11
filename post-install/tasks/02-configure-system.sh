@@ -4,7 +4,7 @@ set -e -u
 source files/vars
 
 echo 'Creating and configuring user'
-systemctl enable --now systemd-homed
+systemctl enable --now systemd-homed > /dev/null 2>&1
 homectl create $user_name --uid $user_id --member-of=wheel
 usermod -a -G wheel $user_name
 echo "$user_name ALL=(ALL) ALL" > /etc/sudoers.d/$user_name

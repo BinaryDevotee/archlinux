@@ -13,7 +13,7 @@ cat <<EOF > /etc/sddm.conf.d/kde_settings.conf
 [Autologin]
 Relogin=false
 Session=plasma
-User=$user_name
+User=
 
 [General]
 HaltCommand=/usr/bin/systemctl poweroff
@@ -27,4 +27,6 @@ MaximumUid=$user_id
 MinimumUid=$user_id
 EOF
 
-systemctl enable sddm
+echo 'Enabling SDDM'
+systemctl enable sddm > /dev/null 2>&1
+sleep 1

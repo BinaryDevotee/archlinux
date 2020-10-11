@@ -42,6 +42,8 @@ echo 'Activating network services'
 systemctl enable --now systemd-networkd systemd-resolved NetworkManager iwd > /dev/null 2>&1
 sleep 1
 
-echo "Available Wireless networks:" && echo "" && nmcli device wifi && echo ""
+echo "Available Wireless networks:" && echo "" && \
+iwctl station wlan0 scan && \
+iwctl station wlan0 get-networks && echo ""
 read -p "Type the SSID to connect: " ssid
 nmcli device wifi connect $ssid --ask

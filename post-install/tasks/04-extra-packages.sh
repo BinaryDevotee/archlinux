@@ -15,13 +15,16 @@ chown $user_name:$user_name /home/$user_name/.zshrc.local
 homectl update $user_name --shell=/usr/bin/zsh
 cat files/alias >> /home/$user_name/.zshrc.local
 homectl deactivate $user_name
+sleep 1
 
 echo 'Installing Starship'
 wget -q -O /tmp/starship-latest.tar.gz https://github.com/starship/starship/releases/latest/download/starship-x86_64-unknown-linux-gnu.tar.gz
 tar -xf /tmp/starship-latest.tar.gz -C /usr/local/bin/
 rm /tmp/starship-latest.tar.gz
+sleep 1
 
 echo 'Configuring firewall'
-systemctl enable --now ufw
+systemctl enable --now ufw > /dev/null 2>&1
 ufw enable
 ufw allow nfs
+sleep 1

@@ -5,7 +5,7 @@ tasks/02-configure-system.sh
 tasks/03-deploy-plasma.sh
 tasks/04-extra-packages.sh
 
-echo 'Setup complete!'
-sleep 1
+echo 'Setup complete! System will be rebooted.'
+sleep 3
 
 systemctl reboot
