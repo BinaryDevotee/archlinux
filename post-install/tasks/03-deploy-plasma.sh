@@ -9,7 +9,7 @@ pacman --sync --refresh --needed --noconfirm xf86-video-intel vulkan-intel
 pacman --sync --refresh --needed --noconfirm plasma-meta qt5-virtualkeyboard packagekit-qt5 dolphin konsole
 
 mkdir -p /etc/sddm.conf.d
-cat <<EOF > /etc/sddm.conf.d/uid.conf
+cat <<EOF > /etc/sddm.conf.d/kde_settings.conf
 [Autologin]
 Relogin=false
 Session=plasma
