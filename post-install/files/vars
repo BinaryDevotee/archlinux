@@ -22,7 +22,6 @@ pkg_list='
   libva-mesa-driver
   libva-utils
   neofetch
-  neovim
   nfs-utils
   noto-fonts
   noto-fonts-cjk

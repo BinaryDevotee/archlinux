@@ -5,9 +5,10 @@ set -e -u
 source files/vars
 
 add_user () {
-    groupadd -g $user_id $group_name
-    useradd -m -u $user_id $user_name -g $group_name
-    passwd $user_name
+#   groupadd -g $user_id $group_name
+#   useradd -m -u $user_id $user_name -g $group_name
+#   passwd $user_name
+    homectl create $user_name -u $user_id
 }
 echo 'Creating and configuring user'
 add_user
@@ -46,8 +47,6 @@ create_dirs () {
 create_dirs
 
 enable_services () {
-    systemctl enable iwd
-    systemctl enable dhcpcd
     systemctl enable systemd-homed
 }
 enable_services

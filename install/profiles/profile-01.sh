@@ -37,7 +37,7 @@ format_partitions () {
 format_partitions
 
 install_archlinux () {
-    pacstrap /mnt base base-devel linux linux-firmware intel-ucode vim iwd dhcpcd openresolv openssh f2fs-tools
+    pacstrap /mnt base base-devel linux linux-firmware intel-ucode neovim networkmanager iwd openssh f2fs-tools
 }
 install_archlinux
 
