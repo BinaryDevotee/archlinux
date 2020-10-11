@@ -39,11 +39,16 @@ set_dns_mgr () {
 set_dns_mgr
 
 enable_net_services () {
-    systemctl enable systemd-networkd \
+    systemctl enable --now systemd-networkd \
         systemd-resolved \
         NetworkManager \
         iwd
 }
 enable_net_services
 
-# systemctl reboot
+wifi_connect () {
+    echo "Available Wireless networks:" && echo "" && nmcli device wifi && echo ""
+    read -p "Type the SSID to connect: " ssid
+    nmcli device wifi connect $ssid --ask
+}
+wifi_connect
