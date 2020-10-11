@@ -25,4 +25,3 @@ echo 'Configuring firewall'
 systemctl enable --now ufw
 ufw enable
 ufw allow nfs
-
