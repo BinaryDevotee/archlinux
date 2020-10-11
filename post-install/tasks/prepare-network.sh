@@ -31,7 +31,7 @@ nm_iw () {
 nm_iw
 
 set_dns_mgr () {
-    mkdir /etc/iwd
+    mkdir -p /etc/iwd
     printf '%s\n' > /etc/iwd/main.conf \
     '[Network]' \
     'NameResolvingService=systemd'
@@ -46,4 +46,4 @@ enable_net_services () {
 }
 enable_net_services
 
-systemctl reboot
+# systemctl reboot

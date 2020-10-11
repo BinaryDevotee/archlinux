@@ -33,4 +33,4 @@ enable_sddm () {
 }
 enable_sddm
  
-systemctl reboot
+# systemctl reboot

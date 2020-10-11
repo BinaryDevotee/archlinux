@@ -28,10 +28,12 @@ starship_install () {
 echo 'Installing Starship Cross-Shell'
 starship_install
 
-start_ufw () {
+config_ufw () {
+    systemctl enable --now ufw
     ufw enable
+    ufw allow nfs
 }
-start_ufw
+config_ufw
 
 set_alias () {
     cat files/alias >> /home/$user_name/.zshrc.local
