@@ -21,6 +21,7 @@ pkg_list='
   libva-intel-driver
   libva-mesa-driver
   libva-utils
+  man
   neofetch
   nfs-utils
   noto-fonts-cjk

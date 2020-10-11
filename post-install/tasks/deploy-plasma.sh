@@ -4,31 +4,27 @@
 set -e -u
 source files/vars
 
-deploy_xorg () {
-    pacman --sync --refresh --needed --noconfirm xorg-server
-}
-deploy_xorg
+pacman --sync --refresh --needed --noconfirm xorg-server
+pacman --sync --refresh --needed --noconfirm xf86-video-intel vulkan-intel
+pacman --sync --refresh --needed --noconfirm plasma-meta qt5-virtualkeyboard packagekit-qt5 dolphin konsole
 
-install_drivers () {
-    pacman --sync --refresh --needed --noconfirm xf86-video-intel vulkan-intel
-}
-install_drivers
+mkdir -p /etc/sddm.conf.d
+cat <<EOF > /etc/sddm.conf.d/uid.conf
+[Autologin]
+Relogin=false
+Session=plasma
+User=$user_name
 
-deploy_plasma () {
-    pacman --sync --refresh --needed --noconfirm plasma-meta qt5-virtualkeyboard packagekit-qt5 dolphin konsole
-}
-deploy_plasma
+[General]
+HaltCommand=/usr/bin/systemctl poweroff
+RebootCommand=/usr/bin/systemctl reboot
 
-configure_sddm () {
-    mkdir -p /etc/sddm.conf.d
-    printf '%s\n' > /etc/sddm.conf.d/uid.conf \
-        "[Users]" \
-        "MaximumUid=$user_id" \
-        "MinimumUid=$user_id"
-}
-configure_sddm
+[Theme]
+Current=breeze
 
-enable_sddm () {
-    systemctl enable sddm
-}
-enable_sddm
+[Users]
+MaximumUid=$user_id
+MinimumUid=$user_id
+EOF
+
+systemctl enable sddm
