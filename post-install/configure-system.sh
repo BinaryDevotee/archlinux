@@ -46,11 +46,6 @@ create_dirs () {
 }
 create_dirs
 
-enable_services () {
-    systemctl enable systemd-homed
-}
-enable_services
-
 system_reboot () {
     systemctl reboot
 }

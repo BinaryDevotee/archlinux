@@ -96,6 +96,10 @@ ps_scripts () {
 }
 ps_scripts
 
+enable_services () {
+    systemctl enable systemd-homed
+}
+
 finish_install () {
     umount -R /mnt
     systemctl poweroff
