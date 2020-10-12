@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e -u
+
 tasks/01-prepare-network.sh
 tasks/02-configure-system.sh
 tasks/03-deploy-plasma.sh
