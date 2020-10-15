@@ -24,6 +24,7 @@ pkg_list='
   man
   neofetch
   nfs-utils
+  networkmanager-openvpn
   noto-fonts-cjk
   noto-fonts-emoji
   openvpn

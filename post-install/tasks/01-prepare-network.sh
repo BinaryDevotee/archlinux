@@ -2,23 +2,39 @@
 
 set -e -u
 
-echo 'Enabling DHCP on all wired interfaces'
-cat <<EOF > /etc/systemd/network/20-wired.network
+echo 'Enabling DHCP on all ethernet devices'
+cat <<EOF > /etc/systemd/network/20-ethernet.network
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 [Match]
-Name=enp*
+Name=en*
+Name=eth*
 
 [Network]
 DHCP=yes
+IPv6PrivacyExtensions=yes
+
+[DHCP]
+RouteMetric=512
 EOF
 sleep 1
 
-echo 'Enabling DHCP on all wireless interfaces'
-cat <<EOF > /etc/systemd/network/25-wireless.network
+echo 'Enabling DHCP on all wireless devices'
+cat <<EOF > /etc/systemd/network/20-wireless.network
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 [Match]
+Name=wlp*
 Name=wlan*
 
 [Network]
 DHCP=yes
+IPv6PrivacyExtensions=yes
+
+[DHCP]
+RouteMetric=1024
 EOF
 sleep 1
 
