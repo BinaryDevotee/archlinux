@@ -35,6 +35,7 @@ pkg_list='
   noto-fonts-cjk
   noto-fonts-emoji
   openvpn
+  pulseaudio-bluetooth
   tmux
   ufw
   wget
