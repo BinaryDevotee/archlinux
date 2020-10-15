@@ -35,11 +35,12 @@ arch-chroot /mnt mkinitcpio --allpresets
 arch-chroot /mnt passwd
 
 arch-chroot /mnt bootctl --path=/boot install
-cat files/bootloader/loader.conf > /mnt/boot/loader/loader.conf
-cat files/bootloader/arch.conf > /mnt/boot/loader/entries/arch.conf
+cat profiles/profile-01/files/bootloader/loader.conf > /mnt/boot/loader/loader.conf
+cat profiles/profile-01/files/bootloader/arch.conf > /mnt/boot/loader/entries/arch.conf
 arch-chroot /mnt bootctl --path=/boot update
 
-cp -r ../post-install /mnt/root
+cp -r profiles/profile-01/post-install /mnt/root
+cp -r profiles/profile-01/files /mnt/root
 cp -r ../roles /mnt/root
 
 umount -R /mnt

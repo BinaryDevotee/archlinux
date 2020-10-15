@@ -27,7 +27,6 @@ systemctl enable --now systemd-networkd systemd-resolved NetworkManager iwd > /d
 sleep 1
 
 echo "" && echo "Please, connect to continue" && echo "" &&
-iwctl station wlan0 scan &&
 iwctl station wlan0 get-networks && echo "" &&
 read -p "Type the SSID to connect: " ssid
 nmcli device wifi connect $ssid --ask
@@ -36,7 +35,7 @@ nmcli device wifi connect $ssid --ask
 ## task 02: system setup
 echo 'Creating and configuring user'
 systemctl enable --now systemd-homed > /dev/null 2>&1
-homectl create $user_name --uid $user_id --member-of=wheel --real-name=$real_name --email-address=$email_address --location=$location
+homectl create $user_name --uid $user_id --member-of=wheel
 usermod -a -G wheel $user_name
 echo "$user_name ALL=(ALL) ALL" > /etc/sudoers.d/$user_name
 sleep 1
@@ -86,7 +85,7 @@ wget -q -O /home/$user_name/.zshrc       https://git.grml.org/f/grml-etc-core/et
 wget -q -O /home/$user_name/.zshrc.local https://git.grml.org/f/grml-etc-core/etc/skel/.zshrc
 chown $user_name:$user_name /home/$user_name/.zshrc
 chown $user_name:$user_name /home/$user_name/.zshrc.local
-homectl update $user_name --shell=/usr/bin/zsh
+homectl update $user_name --shell=/usr/bin/zsh --real-name=$real_name --email-address=$email_address --location=$location
 cat ../files/misc/alias >> /home/$user_name/.zshrc.local
 homectl deactivate $user_name
 sleep 1
