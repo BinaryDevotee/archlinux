@@ -19,11 +19,11 @@ echo ""
 read -p 'Enter the desired installation profile: ' inst_profile
 
 case $inst_profile in
-  a) profiles/profile-01.sh ;;
-  b) profiles/profile-02.sh ;;
-  c) profiles/profile-03.sh ;;
-  d) profiles/profile-04.sh ;;
-  e) profiles/profile-05.sh ;;
+  a) profiles/profile-01/profile-01.sh ;;
+  b) profiles/profile-02/profile-02.sh ;;
+  c) profiles/profile-03/profile-03.sh ;;
+  d) profiles/profile-04/profile-04.sh ;;
+  e) profiles/profile-05/profile-05.sh ;;
   q) exit 0 ;;
   *) echo 'Invalid choice' ;;
 esac
