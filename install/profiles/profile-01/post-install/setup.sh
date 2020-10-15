@@ -25,7 +25,7 @@ sleep 1
 echo 'Activating network services'
 systemctl enable --now systemd-networkd systemd-resolved > /dev/null 2>&1
 systemctl enable --now iwd NetworkManager > /dev/null 2>&1
-sleep 7
+sleep 8
 
 echo "" && echo "Please, connect to continue" && echo "" &&
 iwctl station wlan0 get-networks && echo "" &&
@@ -113,6 +113,11 @@ sleep 1
 
 echo 'Enabling bluetooth'
 systemctl enable bluetooth > /dev/null 2>&1
+sleep 1
+
+echo 'Disabling the root user'
+passwd --delete root > /dev/null 2>&1
+passwd --lock root > /dev/null 2>&1
 sleep 1
 
 echo 'Post install tasks complete. System will be rebooted.'
