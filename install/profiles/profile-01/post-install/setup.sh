@@ -36,7 +36,7 @@ nmcli device wifi connect $ssid --ask
 ## task 02: system setup
 echo 'Creating and configuring user'
 systemctl enable --now systemd-homed > /dev/null 2>&1
-homectl create $user_name --uid $user_id --fs-type=xfs --member-of=wheel
+homectl create $user_name --uid $user_id --member-of=wheel
 usermod -a -G wheel $user_name
 echo "$user_name ALL=(ALL) ALL" > /etc/sudoers.d/$user_name
 sleep 1
