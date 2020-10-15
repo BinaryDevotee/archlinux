@@ -25,10 +25,9 @@ sleep 1
 echo 'Activating network services'
 systemctl enable --now systemd-networkd systemd-resolved > /dev/null 2>&1
 systemctl enable --now iwd NetworkManager > /dev/null 2>&1
-sleep 1
+sleep 7
 
 echo "" && echo "Please, connect to continue" && echo "" &&
-# iwctl station wlan0 scan &&
 iwctl station wlan0 get-networks && echo "" &&
 read -p "Type the SSID to connect: " ssid
 nmcli device wifi connect $ssid --ask
@@ -85,10 +84,10 @@ sleep 1
 
 echo 'Updating user information'
 homectl activate $user_name
-homectl update $user_name --shell=/usr/bin/zsh
-homectl update $user_name --real-name=$real_name
-homectl update $user_name --email-address=$email_address
-homectl update $user_name --location=$location
+homectl update $user_name --shell='/usr/bin/zsh'
+homectl update $user_name --real-name="$real_name"
+homectl update $user_name --email-address="$email_address"
+homectl update $user_name --location="$location"
 sleep 1
 
 echo 'Configuring Z-shell'

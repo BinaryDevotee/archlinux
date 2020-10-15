@@ -32,7 +32,7 @@ genfstab -L /mnt >> /mnt/etc/fstab
 
 sed -e '52s/udev/systemd/g' -i /mnt/etc/mkinitcpio.conf
 arch-chroot /mnt mkinitcpio --allpresets
-arch-chroot /mnt passwd
+arch-chroot /mnt echo 'root:default' | chpasswd
 
 arch-chroot /mnt bootctl --path=/boot install
 cat profiles/profile-01/files/bootloader/loader.conf > /mnt/boot/loader/loader.conf
