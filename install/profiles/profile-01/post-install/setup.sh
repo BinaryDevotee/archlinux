@@ -109,7 +109,7 @@ sleep 1
 
 ## task 05: apps configuration
 echo 'Installing Starship'
-wget -q -O -i /tmp/starship-latest.tar.gz ../files/apps/starship/download_url
+wget -q -O /tmp/starship-latest.tar.gz -i ../files/apps/starship/download_url
 tar -xf /tmp/starship-latest.tar.gz -C /usr/local/bin/
 rm /tmp/starship-latest.tar.gz
 sleep 1
