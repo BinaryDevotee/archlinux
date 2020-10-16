@@ -34,8 +34,8 @@ sed -e '52s/udev/systemd/g' -i /mnt/etc/mkinitcpio.conf
 arch-chroot /mnt mkinitcpio --allpresets
 
 arch-chroot /mnt bootctl --path=/boot install
-cat profiles/profile-01/files/bootloader/loader.conf > /mnt/boot/loader/loader.conf
-cat profiles/profile-01/files/bootloader/arch.conf > /mnt/boot/loader/entries/arch.conf
+cat profiles/profile-01/files/system/bootloader/loader.conf > /mnt/boot/loader/loader.conf
+cat profiles/profile-01/files/system/bootloader/arch.conf > /mnt/boot/loader/entries/arch.conf
 arch-chroot /mnt bootctl --path=/boot update
 
 echo 'root:default' | chpasswd --root /mnt

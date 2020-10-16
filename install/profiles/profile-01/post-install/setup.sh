@@ -6,20 +6,20 @@ source ../files/parameters
 
 ## task 01: network setup
 echo 'Enabling DHCP on all ethernet devices'
-cat ../files/network-settings/20-ethernet.network > /etc/systemd/network/20-ethernet.network
+cat ../files/system/network-settings/20-ethernet.network > /etc/systemd/network/20-ethernet.network
 sleep 1
 
 echo 'Enabling DHCP on all wireless devices'
-cat ../files/network-settings/20-wireless.network > /etc/systemd/network/20-wireless.network
+cat ../files/system/network-settings/20-wireless.network > /etc/systemd/network/20-wireless.network
 sleep 1
 
 echo 'Adding iwd as NetworkManager backend'
-cat ../files/network-settings/nm-wifi-backend.conf > /etc/NetworkManager/conf.d/wifi_backend.conf
+cat ../files/system/network-settings/nm-wifi-backend.conf > /etc/NetworkManager/conf.d/wifi_backend.conf
 sleep 1
 
 echo 'Selecting systemd-resolved as the DNS manager'
 mkdir -p /etc/iwd
-cat ../files/network-settings/iwd-main.conf > /etc/iwd/main.conf
+cat ../files/system/network-settings/iwd-main.conf > /etc/iwd/main.conf
 sleep 1
 
 echo 'Activating network services'
@@ -66,11 +66,12 @@ sleep 1
 ## task 03: xorg configuration and plasma deployment
 pacman --sync --refresh --needed --noconfirm xorg-server
 pacman --sync --refresh --needed --noconfirm xf86-video-intel vulkan-intel
-pacman --sync --refresh --needed --noconfirm plasma-meta qt5-virtualkeyboard packagekit-qt5 dolphin konsole kcalc
+pacman --sync --refresh --needed --noconfirm plasma-meta
+pacman --sync --refresh --needed --noconfirm qt5-virtualkeyboard packagekit-qt5 dolphin konsole kcalc kate
 
 echo 'Configuring SDDM'
 mkdir -p /etc/sddm.conf.d
-cat ../files/sddm/kde_settings.conf > /etc/sddm.conf.d/kde_settings.conf
+cat ../files/apps/sddm/kde_settings.conf > /etc/sddm.conf.d/kde_settings.conf
 sed -i "s/max-user-id/$user_id/g" /etc/sddm.conf.d/kde_settings.conf
 sed -i "s/min-user-id/$user_id/g" /etc/sddm.conf.d/kde_settings.conf
 systemctl enable sddm > /dev/null 2>&1
@@ -90,25 +91,10 @@ homectl update $user_name --email-address="$email_address"
 homectl update $user_name --location="$location"
 sleep 1
 
-echo 'Configuring Z-shell'
-wget -q -O /home/$user_name/.zshrc       https://git.grml.org/f/grml-etc-core/etc/zsh/zshrc
-wget -q -O /home/$user_name/.zshrc.local https://git.grml.org/f/grml-etc-core/etc/skel/.zshrc
-chown $user_name:$user_name /home/$user_name/.zshrc
-chown $user_name:$user_name /home/$user_name/.zshrc.local
-cat ../files/misc/alias >> /home/$user_name/.zshrc.local
-homectl deactivate $user_name
-sleep 1
-
-echo 'Installing Starship'
-wget -q -O /tmp/starship-latest.tar.gz https://github.com/starship/starship/releases/latest/download/starship-x86_64-unknown-linux-gnu.tar.gz
-tar -xf /tmp/starship-latest.tar.gz -C /usr/local/bin/
-rm /tmp/starship-latest.tar.gz
-sleep 1
-
 echo 'Configuring firewall'
 systemctl enable ufw > /dev/null 2>&1
-ufw enable
-ufw allow nfs
+ufw enable > /dev/null 2>&1
+ufw allow nfs > /dev/null 2>&1
 sleep 1
 
 echo 'Enabling bluetooth'
@@ -118,6 +104,39 @@ sleep 1
 echo 'Disabling the root user'
 passwd --delete root > /dev/null 2>&1
 passwd --lock root > /dev/null 2>&1
+sleep 1
+
+
+## task 05: apps configuration
+echo 'Installing Starship'
+wget -q -O -i /tmp/starship-latest.tar.gz ../files/apps/starship/download_url
+tar -xf /tmp/starship-latest.tar.gz -C /usr/local/bin/
+rm /tmp/starship-latest.tar.gz
+sleep 1
+
+echo 'Configuring Z-shell'
+cat ../files/apps/zsh/zshrc > $user_home/.zshrc
+cat ../files/apps/zsh/zshrc.local > $user_home/.zshrc.local
+cat ../files/apps/zsh/aliases >> $user_home/.zshrc.local
+sleep 1
+
+echo 'Configuring tmux'
+cat ../files/apps/tmux/tmux.conf > $user_home/.tmux.conf
+sleep 1
+
+echo 'Configuring mpv'
+mkdir -p $user_home/.config/mpv
+cat ../files/apps/mpv/mpv.conf > $user_home/.config/mpv/mpv.conf
+sleep 1
+
+echo 'Configuring nvim'
+mkdir -p $user_home/.config/nvim
+cat ../files/apps/nvim/init.vim > $user_home/.config/nvim/init.vim
+sleep 1
+
+echo 'Adjusting file permissions'
+chown -R $user_name:$user_name $user_home
+homectl deactivate $user_name
 sleep 1
 
 echo 'Post install tasks complete. System will be rebooted.'
