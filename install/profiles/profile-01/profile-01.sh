@@ -27,7 +27,7 @@ mkfs.f2fs -f /dev/disk/by-partlabel/ARCH_OS -l ARCH_OS
 mount -L ARCH_OS /mnt && mkdir -p /mnt/boot
 mount -L ARCH_BOOT /mnt/boot 
 
-pacstrap /mnt base base-devel linux linux-firmware intel-ucode vim neovim networkmanager iwd openssh f2fs-tools
+pacstrap /mnt base base-devel linux linux-lts linux-firmware intel-ucode vim neovim iwd networkmanager openssh f2fs-tools
 genfstab -L /mnt >> /mnt/etc/fstab
 
 sed -e '52s/udev/systemd/g' -i /mnt/etc/mkinitcpio.conf
@@ -36,6 +36,7 @@ arch-chroot /mnt mkinitcpio --allpresets
 arch-chroot /mnt bootctl --path=/boot install
 cat profiles/profile-01/files/system/bootloader/loader.conf > /mnt/boot/loader/loader.conf
 cat profiles/profile-01/files/system/bootloader/arch.conf > /mnt/boot/loader/entries/arch.conf
+cat profiles/profile-01/files/system/bootloader/arch-lts.conf > /mnt/boot/loader/entries/arch-lts.conf
 arch-chroot /mnt bootctl --path=/boot update
 
 echo 'root:default' | chpasswd --root /mnt
