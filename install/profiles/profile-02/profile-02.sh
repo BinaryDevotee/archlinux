@@ -1,5 +1,5 @@
 #
-# profile-02.sh
+# profile-04.sh
 #
 
 #!/bin/bash
@@ -19,7 +19,7 @@ partition_disk () {
     mkpart primary 1MiB 301MiB \
     mkpart primary 301MiB 201GiB \
     name 1 ARCH_BOOT \
-    name 2 ARCH_OS \
+    name 2 CRYPT_ROOT \
     set 1 boot on \
     align-check optimal 1 \
     align-check optimal 2
@@ -28,16 +28,18 @@ partition_disk () {
 }
 partition_disk
 
-format_partitions () {
+encrypt_partitions () {
     mkfs.fat -F32 /dev/disk/by-partlabel/ARCH_BOOT -n ARCH_BOOT
-    mkfs.xfs -f /dev/disk/by-partlabel/ARCH_OS -L ARCH_OS
+    cryptsetup --verbose --batch-mode --verify-passphrase luksFormat /dev/disk/by-partlabel/CRYPT_ROOT --label CRYPT_ROOT
+    cryptsetup luksOpen /dev/disk/by-partlabel/CRYPT_ROOT CRYPT_ROOT
+    mkfs.xfs -f /dev/mapper/CRYPT_ROOT -L ARCH_OS
     mount -L ARCH_OS /mnt && mkdir -p /mnt/boot
-    mount -L ARCH_BOOT /mnt/boot 
+    mount -L ARCH_BOOT /mnt/boot
 }
-format_partitions
+encrypt_partitions
 
 install_archlinux () {
-    pacstrap /mnt base base-devel linux linux-firmware intel-ucode vim iwd dhcpcd openresolv openssh xfsprogs
+    pacstrap /mnt base base-devel linux linux-firmware intel-ucode vim networkmanager openssh xfsprogs
 }
 install_archlinux
 
@@ -47,7 +49,8 @@ generate_fstab () {
 generate_fstab
 
 update_initramfs () {
-    sed -e '52s/udev/systemd/g' -i /mnt/etc/mkinitcpio.conf
+    hooks='base systemd autodetect keyboard modconf block sd-encrypt filesystems fsck'
+    sed -e "52s/^.*/HOOKS=($hooks)/g" -i /mnt/etc/mkinitcpio.conf
     arch-chroot /mnt mkinitcpio --allpresets
 }
 update_initramfs
@@ -73,12 +76,13 @@ bootloader () {
     loader_conf
 
     entries_conf () {
+        dm_crypt_uuid="$(blkid /dev/disk/by-partlabel/CRYPT_ROOT --match-tag UUID --output value)"
         printf '%s\n' > /mnt/boot/loader/entries/arch.conf \
         'title   Arch Linux' \
         'linux   /vmlinuz-linux' \
         'initrd  /intel-ucode.img' \
         'initrd  /initramfs-linux.img' \
-        'options root=LABEL=ARCH_OS rw' \
+        'options luks.name='$dm_crypt_uuid'=ARCH_OS root=/dev/mapper/ARCH_OS rw' \
 	'options intel_iommu=on'
     }
     entries_conf
@@ -98,6 +102,7 @@ ps_scripts
 
 finish_install () {
     umount -R /mnt
+    cryptsetup luksClose CRYPT_ROOT
     systemctl poweroff
 }
 finish_install

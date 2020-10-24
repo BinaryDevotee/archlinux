@@ -10,8 +10,6 @@ echo "Simple Arch Linux installation script" && echo ""
 echo 'a: profile-01.sh'
 echo 'b: profile-02.sh'
 echo 'c: profile-03.sh'
-echo 'd: profile-04.sh'
-echo 'e: profile-05.sh'
 echo 'q: exit'
 
 echo ""
@@ -22,8 +20,6 @@ case $inst_profile in
   a) profiles/profile-01/profile-01.sh ;;
   b) profiles/profile-02/profile-02.sh ;;
   c) profiles/profile-03/profile-03.sh ;;
-  d) profiles/profile-04/profile-04.sh ;;
-  e) profiles/profile-05/profile-05.sh ;;
   q) exit 0 ;;
   *) echo 'Invalid choice' ;;
 esac
