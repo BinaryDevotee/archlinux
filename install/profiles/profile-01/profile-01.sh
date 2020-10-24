@@ -27,16 +27,8 @@ mkfs.f2fs -f /dev/disk/by-partlabel/ARCH_OS -l ARCH_OS
 mount -L ARCH_OS /mnt && mkdir -p /mnt/boot
 mount -L ARCH_BOOT /mnt/boot 
 
-mkdir -p /mnt/etc/mkinitcpio.d
-cat profiles/profile-01/files/system/mkinitcpio/mkinitcpio-linux.conf > /mnt/etc/mkinitcpio-linux.conf
-cat profiles/profile-01/files/system/mkinitcpio/mkinitcpio-linux-lts.conf > /mnt/etc/mkinitcpio-linux-lts.conf
-cat profiles/profile-01/files/system/mkinitcpio/presets/linux.preset > /mnt/etc/mkinitcpio.d/linux.preset
-cat profiles/profile-01/files/system/mkinitcpio/presets/linux-lts.preset > /mnt/etc/mkinitcpio.d/linux-lts.preset
-
 pacstrap /mnt base base-devel linux linux-lts linux-firmware intel-ucode vim neovim iwd networkmanager openssh f2fs-tools
 genfstab -L /mnt >> /mnt/etc/fstab
-
-# arch-chroot /mnt mkinitcpio --allpresets
 
 arch-chroot /mnt bootctl --path=/boot install
 cat profiles/profile-01/files/system/bootloader/loader.conf > /mnt/boot/loader/loader.conf

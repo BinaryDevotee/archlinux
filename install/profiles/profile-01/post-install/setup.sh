@@ -4,7 +4,16 @@ set -e -u
 source ../files/parameters
 
 
-## task 01: network setup
+# task 01: customize mkinitcpio
+echo 'Generating custom mkinitcpio files'
+cat ../files/system/mkinitcpio/mkinitcpio-linux.conf > /etc/mkinitcpio-linux.conf
+cat ../files/system/mkinitcpio/mkinitcpio-linux-lts.conf > /etc/mkinitcpio-linux-lts.conf
+cat ../files/system/mkinitcpio/presets/linux.preset > /etc/mkinitcpio.d/linux.preset
+cat ../files/system/mkinitcpio/presets/linux-lts.preset > /etc/mkinitcpio.d/linux-lts.preset
+sleep 1
+
+
+## task 02: network setup
 echo 'Enabling DHCP on all ethernet devices'
 cat ../files/system/network-settings/20-ethernet.network > /etc/systemd/network/20-ethernet.network
 sleep 1
@@ -33,7 +42,7 @@ read -p "Type the SSID to connect: " ssid
 nmcli device wifi connect $ssid --ask
 
 
-## task 02: system setup
+## task 03: system setup
 echo 'Creating and configuring user'
 systemctl enable --now systemd-homed > /dev/null 2>&1
 homectl create $user_name --uid $user_id --member-of=wheel
@@ -63,7 +72,7 @@ chown -R $user_name:$user_name /data
 sleep 1
 
 
-## task 03: xorg configuration and plasma deployment
+## task 04: xorg configuration and plasma deployment
 pacman --sync --refresh --needed --noconfirm xorg-server
 pacman --sync --refresh --needed --noconfirm xf86-video-intel vulkan-intel
 pacman --sync --refresh --needed --noconfirm plasma-meta
@@ -78,7 +87,7 @@ systemctl enable sddm > /dev/null 2>&1
 sleep 1
 
 
-## task 04: system configuration
+## task 05: system configuration
 echo 'Installing additional packages'
 pacman --sync --refresh --needed --noconfirm $pkg_list
 sleep 1
@@ -107,7 +116,7 @@ passwd --lock root > /dev/null 2>&1
 sleep 1
 
 
-## task 05: apps configuration
+## task 06: apps configuration
 echo 'Installing Starship'
 wget -q -O /tmp/starship-latest.tar.gz -i ../files/apps/starship/download_url
 tar -xf /tmp/starship-latest.tar.gz -C /usr/local/bin/
