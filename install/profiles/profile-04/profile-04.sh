@@ -12,8 +12,7 @@ esp="$(sfdisk -l |grep EFI |awk '{print $1}')"
 free_space_start="parted $pv unit MB print free |grep 'Free Space' |tail -n1 |awk '{print $1}'"
 free_space_end="parted $pv unit MB print free |grep 'Free Space' |tail -n1 |awk '{print $2}'"
 
-parted -s $pv \
-mkpart ARCH_OS $free_space_start $free_space_end
+parted -s $pv mkpart ARCH_OS $free_space_start $free_space_end
 
 udevadm settle && sync
 

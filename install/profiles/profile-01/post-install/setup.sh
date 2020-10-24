@@ -51,7 +51,7 @@ echo "$user_name ALL=(ALL) ALL" > /etc/sudoers.d/$user_name
 sleep 1
 
 echo 'Setting hostname and NTP settings'
-hkdialogostnamectl set-hostname $host_name
+hostnamectl set-hostname $host_name
 timedatectl set-timezone Europe/Prague
 timedatectl set-ntp true
 sleep 1

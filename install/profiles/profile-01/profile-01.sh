@@ -12,10 +12,8 @@ wipefs -a -f $pv && blkdiscard -f $pv
 
 parted -s $pv \
 mklabel gpt \
-mkpart primary 1MiB 301MiB \
-mkpart primary 301MiB '85%' \
-name 1 ARCH_BOOT \
-name 2 ARCH_OS \
+mkpart ARCH_BOOT 1MiB 301MiB \
+mkpart ARCH_OS 301MiB '85%' \
 set 1 boot on \
 align-check optimal 1 \
 align-check optimal 2
