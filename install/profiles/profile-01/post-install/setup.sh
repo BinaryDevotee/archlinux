@@ -51,7 +51,7 @@ echo "$user_name ALL=(ALL) ALL" > /etc/sudoers.d/$user_name
 sleep 1
 
 echo 'Setting hostname and NTP settings'
-hostnamectl set-hostname $host_name
+hkdialogostnamectl set-hostname $host_name
 timedatectl set-timezone Europe/Prague
 timedatectl set-ntp true
 sleep 1
@@ -76,7 +76,7 @@ sleep 1
 pacman --sync --refresh --needed --noconfirm xorg-server
 pacman --sync --refresh --needed --noconfirm xf86-video-intel vulkan-intel
 pacman --sync --refresh --needed --noconfirm plasma-meta
-pacman --sync --refresh --needed --noconfirm qt5-virtualkeyboard packagekit-qt5 dolphin konsole kcalc kate
+pacman --sync --refresh --needed --noconfirm qt5-virtualkeyboard packagekit-qt5 dolphin konsole kcalc kate spectacle kdialog
 
 echo 'Configuring SDDM'
 mkdir -p /etc/sddm.conf.d
