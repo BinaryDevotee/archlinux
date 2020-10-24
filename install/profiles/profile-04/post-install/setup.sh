@@ -7,9 +7,7 @@ source ../files/parameters
 # task 01: customize mkinitcpio
 echo 'Generating custom mkinitcpio files'
 cat ../files/system/mkinitcpio/mkinitcpio-linux.conf > /etc/mkinitcpio-linux.conf
-cat ../files/system/mkinitcpio/mkinitcpio-linux-lts.conf > /etc/mkinitcpio-linux-lts.conf
 cat ../files/system/mkinitcpio/presets/linux.preset > /etc/mkinitcpio.d/linux.preset
-cat ../files/system/mkinitcpio/presets/linux-lts.preset > /etc/mkinitcpio.d/linux-lts.preset
 sleep 1
 
 
