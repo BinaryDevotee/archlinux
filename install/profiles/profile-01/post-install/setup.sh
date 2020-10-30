@@ -54,6 +54,7 @@ echo 'Setting hostname and NTP settings'
 hostnamectl set-hostname $host_name
 timedatectl set-timezone Europe/Prague
 timedatectl set-ntp true
+hwclock --systohc
 sleep 1
 
 echo 'Adjusting locale settings'
