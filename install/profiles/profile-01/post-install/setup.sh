@@ -72,7 +72,29 @@ chown -R $user_name:$user_name /data
 sleep 1
 
 
-## task 04: xorg configuration and plasma deployment
+## task 04: system tuning
+echo 'Installing packages packages for system tuning'
+pacman --sync --refresh --needed --noconfirm $pkg_hardware
+sleep 1
+
+echo 'Setting healthy battery thresholds'
+tlp setcharge 85 90 BAT0
+tlp setcharge 85 90 BAT1
+sleep 1
+
+echo 'Masking systemd-rfkill switches'
+systemctl mask systemd-rfkill.service > /dev/null 2>&1
+systemctl mask systemd-rfkill.socket > /dev/null 2>&1
+sleep 1
+
+echo 'Configuring system services for auto-tune'
+cat ../files/system/battery/powertop.service > /etc/systemd/system/powertop.service
+systemctl enable powertop.service > /dev/null 2>&1
+systemctl enable tlp.service > /dev/null 2>&1
+sleep 1
+
+
+## task 05: xorg configuration and plasma deployment
 pacman --sync --refresh --needed --noconfirm xorg-server
 pacman --sync --refresh --needed --noconfirm xf86-video-intel vulkan-intel
 pacman --sync --refresh --needed --noconfirm plasma-meta
@@ -87,9 +109,11 @@ systemctl enable sddm > /dev/null 2>&1
 sleep 1
 
 
-## task 05: system configuration
+## task 06: system configuration
 echo 'Installing additional packages'
-pacman --sync --refresh --needed --noconfirm $pkg_list
+pacman --sync --refresh --needed --noconfirm $pkg_utils
+pacman --sync --refresh --needed --noconfirm $pkg_multimedia
+pacman --sync --refresh --needed --noconfirm $pkg_apps
 sleep 1
 
 echo 'Updating user information'
@@ -116,7 +140,7 @@ passwd --lock root > /dev/null 2>&1
 sleep 1
 
 
-## task 06: apps configuration
+## task 07: apps configuration
 echo 'Installing Starship'
 wget -q -O /tmp/starship-latest.tar.gz -i ../files/apps/starship/download_url
 tar -xf /tmp/starship-latest.tar.gz -C /usr/local/bin/

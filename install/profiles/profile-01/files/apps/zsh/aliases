@@ -5,6 +5,7 @@
 
 # General aliases
 alias cat='/usr/bin/bat'
+alias tmux='tmux -2'
 alias vim='/usr/bin/nvim'
 alias vimdiff='/usr/bin/nvim -d'
 
