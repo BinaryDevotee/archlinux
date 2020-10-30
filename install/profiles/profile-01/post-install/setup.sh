@@ -82,14 +82,9 @@ tlp setcharge 85 90 BAT0
 tlp setcharge 85 90 BAT1
 sleep 1
 
-echo 'Masking systemd-rfkill switches'
+echo 'Configuring systemd services for system tuning'
 systemctl mask systemd-rfkill.service > /dev/null 2>&1
 systemctl mask systemd-rfkill.socket > /dev/null 2>&1
-sleep 1
-
-echo 'Configuring system services for auto-tune'
-cat ../files/system/battery/powertop.service > /etc/systemd/system/powertop.service
-systemctl enable powertop.service > /dev/null 2>&1
 systemctl enable tlp.service > /dev/null 2>&1
 sleep 1
 
