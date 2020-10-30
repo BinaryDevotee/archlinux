@@ -16,10 +16,8 @@ sleep 1
 ## task02: configuring network
 echo 'Configuring NetworkManager'
 cat ../files/system/network/NetworkManager/dhcp-client.conf > /etc/NetworkManager/conf.d/dhcp-client.conf
-cat ../files/system/network/NetworkManager/dns.conf > /etc/NetworkManager/conf.d/dns.conf
 cat ../files/system/network/NetworkManager/rc-manager.conf > /etc/NetworkManager/conf.d/rc-manager.conf
 cat ../files/system/network/NetworkManager/wifi-backend.conf > /etc/NetworkManager/conf.d/wifi-backend.conf
-cat ../files/system/network/NetworkManager/cache.conf > /etc/NetworkManager/dnsmasq.d/cache.conf
 sleep 1
 
 echo 'Configuring systemd network components'
