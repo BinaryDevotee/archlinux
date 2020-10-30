@@ -28,6 +28,7 @@ pkg_hardware='
 
 pkg_utils='
   bat
+  firewalld
   git
   htop
   keychain
@@ -37,7 +38,6 @@ pkg_utils='
   networkmanager-openvpn
   openvpn
   tmux
-  ufw
   wget
   zsh
   zsh-autosuggestions

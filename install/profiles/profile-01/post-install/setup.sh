@@ -13,27 +13,28 @@ cat ../files/system/mkinitcpio/presets/linux-lts.preset > /etc/mkinitcpio.d/linu
 sleep 1
 
 
-## task 02: network setup
-echo 'Enabling DHCP on all ethernet devices'
-cat ../files/system/network-settings/20-ethernet.network > /etc/systemd/network/20-ethernet.network
+## task02: configuring network
+echo 'Configuring NetworkManager'
+cat ../files/system/network/NetworkManager/dhcp-client.conf > /etc/NetworkManager/conf.d/dhcp-client.conf
+cat ../files/system/network/NetworkManager/dns.conf > /etc/NetworkManager/conf.d/dns.conf
+cat ../files/system/network/NetworkManager/rc-manager.conf > /etc/NetworkManager/conf.d/rc-manager.conf
+cat ../files/system/network/NetworkManager/wifi-backend.conf > /etc/NetworkManager/conf.d/wifi-backend.conf
+cat ../files/system/network/NetworkManager/cache.conf > /etc/NetworkManager/dnsmasq.d/cache.conf
 sleep 1
 
-echo 'Enabling DHCP on all wireless devices'
-cat ../files/system/network-settings/20-wireless.network > /etc/systemd/network/20-wireless.network
+echo 'Configuring systemd network components'
+cat ../files/system/network/systemd/20-ethernet.network > /etc/systemd/network/20-ethernet.network
+cat ../files/system/network/systemd/20-wireless.network > /etc/systemd/network/20-wireless.network
 sleep 1
 
-echo 'Adding iwd as NetworkManager backend'
-cat ../files/system/network-settings/nm-wifi-backend.conf > /etc/NetworkManager/conf.d/wifi_backend.conf
-sleep 1
-
-echo 'Selecting systemd-resolved as the DNS manager'
-mkdir -p /etc/iwd
-cat ../files/system/network-settings/iwd-main.conf > /etc/iwd/main.conf
+echo 'Setting default DNS resolver'
+mkdir -p /etc/iwd && cat ../files/system/network/iwd/main.conf > /etc/iwd/main.conf
 sleep 1
 
 echo 'Activating network services'
-systemctl enable --now systemd-networkd systemd-resolved > /dev/null 2>&1
-systemctl enable --now iwd NetworkManager > /dev/null 2>&1
+systemctl enable --now iwd > /dev/null 2>&1
+systemctl enable --now NetworkManager > /dev/null 2>&1
+# systemctl enable --now systemd-networkd systemd-resolved > /dev/null 2>&1
 sleep 8
 
 echo "" && echo "Please, connect to continue" && echo "" &&
@@ -121,9 +122,9 @@ homectl update $user_name --location="$location"
 sleep 1
 
 echo 'Configuring firewall'
-systemctl enable ufw > /dev/null 2>&1
-ufw enable > /dev/null 2>&1
-ufw allow nfs > /dev/null 2>&1
+systemctl enable --now firewalld > /dev/null 2>&1
+firewall-cmd --add-service=nfs --permanent > /dev/null 2>&1
+firewall-cmd --reload > /dev/null 2>&1
 sleep 1
 
 echo 'Enabling bluetooth'
