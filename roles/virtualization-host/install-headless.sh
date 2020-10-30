@@ -1,58 +1,61 @@
 #!/bin/bash
 # This script installs and configures libvirt packages (KVM+QEMU) to enable this host to act as a hypervisor
 
-source ../../post-install/files/vars
+# check if user has 'root' privileges
+if [ $(whoami) != 'root' ]
+  then
+    echo "You must be root to do this."
+    exit
+fi
 
-load_modules () {
-    echo 'fuse' > /etc/modules-load.d/fuse.conf
-    echo 'options intel_iommu=soft' >> /boot/loader/entries/*.conf
-}
-load_modules
+# define vars
+user_name='atrodrig'
+img_path='/data/VirtualMachines/images'
+iso_path='/data/VirtualMachines/iso'
 
-install_pkgs () {
-    pacman --sync --refresh --needed --noconfirm libvirt \
-    qemu-headless \
-    ebtables \
-    dnsmasq \
-    bridge-utils \
-    openbsd-netcat \
-    dmidecode \
-    virt-install
+# enabling the 'fuse' module
+echo 'fuse' > /etc/modules-load.d/fuse.conf
 
-    usermod -a -G libvirt $user_name
-    systemctl enable --now libvirtd
+# install required packages
+pacman --sync --refresh --needed --noconfirm libvirt \
+qemu-headless \
+ebtables \
+dnsmasq \
+bridge-utils \
+openbsd-netcat \
+dmidecode \
+virt-install
 
-}
-install_pkgs
+usermod -a -G libvirt $user_name
+systemctl enable --now libvirtd
 
-delete_kvm_pools () {
-    virsh pool-destroy default
-    virsh pool-undefine default
-}
-delete_kvm_pools
+# clean up existing pools
+virt_pools=$(virsh pool-list --all |awk 'FNR >= 3 {print $1}')
+for i in $virt_pools
+do
+  virsh pool-destroy --pool $i
+  virsh pool-undefine --pool $i
+done
 
-create_kvm_pools () {
-    # Create the storage pools definition
-    virsh pool-define-as --name default --type dir --target $img_path
-    virsh pool-define-as --name iso --type dir --target $iso_path
-    # Create the local directories
-    virsh pool-build default
-    virsh pool-build iso
-}
-create_kvm_pools
+# define default/iso pools
+virsh pool-define-as --name default --type dir --target $img_path
+virsh pool-define-as --name iso --type dir --target $iso_path
 
-start_kvm_pools () {
-    # Start the storage pools
-    virsh pool-start default
-    virsh pool-start iso
-    # Turn on autostart
-    virsh pool-autostart default
-    virsh pool-autostart iso
-}
-start_kvm_pools
+# build default/iso pools
+virsh pool-build default
+virsh pool-build iso
 
-start_default_network () {
-    virsh net-autostart default
-    virsh net-start default
-}
-start_default_network
+# start default/iso pools
+virsh pool-start default
+virsh pool-start iso
+
+# autostart default/iso pools
+virsh pool-autostart default
+virsh pool-autostart iso
+
+# start default network
+virsh net-start default
+virsh net-autostart default
+
+# restart libvirt service
+systemctl restart libvirtd
