@@ -5,21 +5,10 @@
 #!/bin/bash
 set -e
 
-echo "Available block devices:" && echo "" && lsblk && echo "" &&
-read -p "Specify the block device for the installation [i.e: /dev/sda]: " pv
-
-esp="$(sfdisk -l $pv |grep EFI |awk '{print $1}')"
-free_space_start="$(parted $pv unit MB print free |grep 'Free Space' |tail -n1 |awk '{print $1}')"
-free_space_end="$(parted $pv unit MB print free |grep 'Free Space' |tail -n1 |awk '{print $2}')"
- 
-parted -s $pv mkpart ARCH_OS $free_space_start $free_space_end
-udevadm settle && sync
- 
-mkfs.f2fs -f /dev/disk/by-partlabel/ARCH_OS -l ARCH_OS
 mount -L ARCH_OS /mnt && mkdir -p /mnt/boot
-mount $esp /mnt/boot 
+mount -L BOOT /mnt/boot 
  
-pacstrap /mnt base base-devel linux linux-firmware intel-ucode vim neovim iwd networkmanager openssh f2fs-tools
+pacstrap /mnt base base-devel linux linux-lts linux-firmware intel-ucode vim neovim iwd openssh f2fs-tools
 genfstab -L /mnt >> /mnt/etc/fstab
  
 arch-chroot /mnt bootctl --path=/boot install
