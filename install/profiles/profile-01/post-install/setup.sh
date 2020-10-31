@@ -14,10 +14,6 @@ sleep 1
 
 
 ## task02: configuring network
-echo 'Installing additional packages'
-pacman pacman --sync --refresh --needed --noconfirm systemd-resolvconf > /dev/null 2>&1
-sleep 1
-
 echo 'Configuring systemd networking'
 cat ../files/system/network/systemd/20-ethernet.network > /etc/systemd/network/20-ethernet.network
 cat ../files/system/network/systemd/20-wireless.network > /etc/systemd/network/20-wireless.network
@@ -41,6 +37,10 @@ echo "" && echo "Please, connect to continue" && echo "" &&
 iwctl station wlan0 get-networks && echo "" &&
 read -p "Type the SSID to connect: " ssid
 iwctl station wlan0 connect $ssid
+
+echo 'Installing the DNS resolver'
+pacman pacman --sync --refresh --needed --noconfirm systemd-resolvconf > /dev/null 2>&1
+sleep 1
 
 
 ## task 03: system setup
