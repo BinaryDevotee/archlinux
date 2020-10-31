@@ -14,6 +14,7 @@ genfstab -L /mnt >> /mnt/etc/fstab
 arch-chroot /mnt bootctl --path=/boot install
 cat profiles/profile-04/files/system/bootloader/loader.conf > /mnt/boot/loader/loader.conf
 cat profiles/profile-04/files/system/bootloader/arch.conf > /mnt/boot/loader/entries/arch.conf
+cat profiles/profile-04/files/system/bootloader/arch-lts.conf > /mnt/boot/loader/entries/arch-lts.conf
 arch-chroot /mnt bootctl --path=/boot update
  
 echo 'root:default' | chpasswd --root /mnt
