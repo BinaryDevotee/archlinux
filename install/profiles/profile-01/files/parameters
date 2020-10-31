@@ -29,9 +29,11 @@ pkg_hardware='
 
 pkg_utils='
   bat
+  ebtables
   firewalld
   git
   htop
+  ipset
   keychain
   man
   neofetch
