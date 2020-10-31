@@ -14,13 +14,11 @@ sleep 1
 
 
 ## task02: configuring network
-echo 'Configuring NetworkManager'
-cat ../files/system/network/NetworkManager/dhcp-client.conf > /etc/NetworkManager/conf.d/dhcp-client.conf
-cat ../files/system/network/NetworkManager/rc-manager.conf > /etc/NetworkManager/conf.d/rc-manager.conf
-cat ../files/system/network/NetworkManager/wifi-backend.conf > /etc/NetworkManager/conf.d/wifi-backend.conf
+echo 'Installing additional packages'
+pacman pacman --sync --refresh --needed --noconfirm systemd-resolvconf > /dev/null 2>&1
 sleep 1
 
-echo 'Configuring systemd network components'
+echo 'Configuring systemd networking'
 cat ../files/system/network/systemd/20-ethernet.network > /etc/systemd/network/20-ethernet.network
 cat ../files/system/network/systemd/20-wireless.network > /etc/systemd/network/20-wireless.network
 sleep 1
@@ -30,15 +28,19 @@ mkdir -p /etc/iwd && cat ../files/system/network/iwd/main.conf > /etc/iwd/main.c
 sleep 1
 
 echo 'Activating network services'
-systemctl enable --now iwd > /dev/null 2>&1
-systemctl enable --now NetworkManager > /dev/null 2>&1
-# systemctl enable --now systemd-networkd systemd-resolved > /dev/null 2>&1
+systemctl enable --now systemd-networkd > /dev/null 2>&1
+systemctl enable --now systemd-resolved > /dev/null 2>&1
+systemctl enable --now iwd              > /dev/null 2>&1
 sleep 8
+
+echo 'Updating resolv.conf for the first time'
+ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+sleep 1
 
 echo "" && echo "Please, connect to continue" && echo "" &&
 iwctl station wlan0 get-networks && echo "" &&
 read -p "Type the SSID to connect: " ssid
-nmcli device wifi connect $ssid --ask
+iwctl station wlan0 connect $ssid
 
 
 ## task 03: system setup
