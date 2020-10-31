@@ -80,8 +80,8 @@ pacman --sync --refresh --needed --noconfirm $pkg_hardware
 sleep 1
 
 echo 'Setting healthy battery thresholds'
-tlp setcharge 85 90 BAT0
-tlp setcharge 85 90 BAT1
+tlp setcharge 85 90 BAT0 > /dev/null 2>&1
+tlp setcharge 85 90 BAT1 > /dev/null 2>&1
 sleep 1
 
 echo 'Configuring systemd services for system tuning'
