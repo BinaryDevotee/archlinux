@@ -19,28 +19,42 @@ img_path='/data/VirtualMachines/images'
 iso_path='/data/VirtualMachines/iso'
 
 # package list
-pkg_list='
+pkg_hardware='
+  acpi
+  acpi_call
+  ethtool
+  powertop
+  tlp
+  tlp-rdw'
+
+pkg_utils='
   bat
-  chromium
+  ebtables
+  firewalld
   git
   htop
+  ipset
   keychain
-  libva-intel-driver
-  libva-mesa-driver
-  libva-utils
   man
-  mpv
   neofetch
   nfs-utils
   networkmanager-openvpn
-  noto-fonts-cjk
-  noto-fonts-emoji
   openvpn
-  pulseaudio-bluetooth
   tmux
-  ufw
   wget
   zsh
   zsh-autosuggestions
   zsh-completions
   zsh-syntax-highlighting'
+
+pkg_multimedia='
+  mpv
+  libva-intel-driver
+  libva-mesa-driver
+  libva-utils
+  pulseaudio-bluetooth'
+
+pkg_apps='
+  chromium
+  noto-fonts-cjk
+  noto-fonts-emoji'

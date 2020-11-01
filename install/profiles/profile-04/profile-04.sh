@@ -5,6 +5,7 @@
 #!/bin/bash
 set -e
 
+mkfs.f2fs -f /dev/disk/by-partlabel/ARCH_OS -l ARCH_OS
 mount -L ARCH_OS /mnt && mkdir -p /mnt/boot
 mount -L BOOT /mnt/boot 
  
