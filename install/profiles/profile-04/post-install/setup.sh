@@ -27,7 +27,8 @@ echo 'Activating network services'
 systemctl enable --now systemd-networkd > /dev/null 2>&1
 systemctl enable --now systemd-resolved > /dev/null 2>&1
 systemctl enable --now iwd              > /dev/null 2>&1
-sleep 8
+watch -g "! iwctl station wlan0 get-networks |grep 'Available networks'" > /dev/null 2>&1
+sleep 1
 
 echo 'Updating resolv.conf for the first time'
 ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
