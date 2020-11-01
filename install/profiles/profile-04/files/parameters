@@ -5,14 +5,14 @@
 #
 
 # user parameters
-real_name='Athila Mattos'
-email_address='athila.m.mattos@gmail.com'
-location='Czechia'
 user_id='113832'
 user_name='atrodrig'
 group_name='atrodrig'
 host_name='atrodrig-t470s'
 user_home="/home/$user_name"
+
+# wifi parameters
+ssid_name='BinaryDevotee_5G'
 
 # libvirt parameters
 img_path='/data/VirtualMachines/images'

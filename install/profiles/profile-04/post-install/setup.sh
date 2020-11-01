@@ -27,20 +27,19 @@ echo 'Activating network services'
 systemctl enable --now systemd-networkd > /dev/null 2>&1
 systemctl enable --now systemd-resolved > /dev/null 2>&1
 systemctl enable --now iwd              > /dev/null 2>&1
-watch -g "! iwctl station wlan0 get-networks |grep 'Available networks'" > /dev/null 2>&1
+watch -g "! iwctl station wlan0 get-networks |grep $ssid_name'" > /dev/null 2>&1
 sleep 1
 
 echo 'Updating resolv.conf for the first time'
 ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 sleep 1
 
-echo "" && echo "Please, connect to continue" && echo "" &&
-iwctl station wlan0 get-networks && echo "" &&
-read -p "Type the SSID to connect: " ssid
-iwctl station wlan0 connect $ssid
+echo "" && echo "Connecting to wifi..." && echo "" &&
+iwctl station wlan0 connect $ssid_name > /dev/null 2>&1
+ping -c3 google.com > /dev/null 2>&1
+sleep 1
 
 echo 'Installing the DNS resolver'
-ping -c3 google.com > /dev/null 2>&1
 pacman pacman --sync --refresh --needed --noconfirm systemd-resolvconf > /dev/null 2>&1
 sleep 1
 
