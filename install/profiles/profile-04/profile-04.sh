@@ -9,7 +9,7 @@ mkfs.f2fs -f /dev/disk/by-partlabel/ARCH_OS -l ARCH_OS
 mount -L ARCH_OS /mnt && mkdir -p /mnt/boot
 mount -L BOOT /mnt/boot 
  
-pacstrap /mnt base base-devel linux linux-lts linux-firmware intel-ucode vim iwd networkmanager openssh f2fs-tools
+pacstrap /mnt base base-devel linux linux-lts linux-firmware intel-ucode vim iwd networkmanager dhclient openssh f2fs-tools
 genfstab -L /mnt >> /mnt/etc/fstab
  
 arch-chroot /mnt bootctl --path=/boot install
@@ -20,8 +20,8 @@ arch-chroot /mnt bootctl --path=/boot update
  
 echo 'root:default' | chpasswd --root /mnt
  
-cp -r profiles/profile-04/post-install /mnt/root
-cp -r profiles/profile-04/files /mnt/root
+cp -rL profiles/profile-04/post-install /mnt/root
+cp -rL profiles/profile-04/files /mnt/root
 cp -r ../roles /mnt/root
  
 umount -R /mnt
