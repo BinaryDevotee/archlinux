@@ -19,28 +19,34 @@ cat ../files/system/network/systemd/20-ethernet.network > /etc/systemd/network/2
 cat ../files/system/network/systemd/20-wireless.network > /etc/systemd/network/20-wireless.network
 sleep 1
 
+echo 'Configuring NetworkManager'
+cat ../files/system/network/NetworkManager/dhcp-client.conf > /etc/NetworkManager/conf.d/dhcp-client.conf
+cat ../files/system/network/NetworkManager/dns.conf > /etc/NetworkManager/conf.d/dns.conf
+cat ../files/system/network/NetworkManager/rc-manager.conf > /etc/NetworkManager/conf.d/rc-manager.conf
+cat ../files/system/network/NetworkManager/systemd-resolved.conf > /etc/NetworkManager/conf.d/systemd-resolved.conf
+cat ../files/system/network/NetworkManager/wifi-backend.conf > /etc/NetworkManager/conf.d/wifi-backend.conf
+sleep 1
+
 echo 'Setting default DNS resolver'
 mkdir -p /etc/iwd && cat ../files/system/network/iwd/main.conf > /etc/iwd/main.conf
 sleep 1
 
 echo 'Activating network services'
-systemctl enable --now systemd-networkd > /dev/null 2>&1
 systemctl enable --now systemd-resolved > /dev/null 2>&1
-systemctl enable --now iwd              > /dev/null 2>&1
-watch -g "! iwctl station wlan0 get-networks |grep $ssid_name'" > /dev/null 2>&1
+systemctl enable --now iwd > /dev/null 2>&1
+systemctl enable --now NetworkManager > /dev/null 2>&1
 sleep 1
 
-echo 'Updating resolv.conf for the first time'
+echo 'Linking resolv.conf to the DNS resolver'
+rm /etc/resolv.conf
 ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 sleep 1
 
-echo "" && echo "Connecting to wifi..." && echo "" &&
-iwctl station wlan0 connect $ssid_name > /dev/null 2>&1
-ping -c3 google.com > /dev/null 2>&1
-sleep 1
+echo "" && echo "Connecting to WiFi..." && echo "" &&
+while ! nmcli device wifi connect $ssid_name password $ssid_pass ; do sleep 2 ; done
 
-echo 'Installing the DNS resolver'
-pacman pacman --sync --refresh --needed --noconfirm systemd-resolvconf > /dev/null 2>&1
+echo 'Installing resolvconf binary'
+pacman -Syu --needed --noconfirm systemd-resolvconf > /dev/null 2>&1
 sleep 1
 
 
@@ -78,12 +84,11 @@ sleep 1
 
 ## task 04: system tuning
 echo 'Installing packages packages for system tuning'
-pacman --sync --refresh --needed --noconfirm $pkg_hardware
+pacman -Syu --needed --noconfirm $pkg_hardware
 sleep 1
 
 echo 'Setting healthy battery thresholds'
-tlp setcharge 85 90 BAT0 > /dev/null 2>&1
-tlp setcharge 85 90 BAT1 > /dev/null 2>&1
+cat ../files/system/battery/01-battery-thresholds.conf > /etc/tlp.d/01-battery-thresholds.conf
 sleep 1
 
 echo 'Configuring systemd services for system tuning'
@@ -94,10 +99,10 @@ sleep 1
 
 
 ## task 05: xorg configuration and plasma deployment
-pacman --sync --refresh --needed --noconfirm xorg-server
-pacman --sync --refresh --needed --noconfirm xf86-video-intel vulkan-intel
-pacman --sync --refresh --needed --noconfirm plasma-meta
-pacman --sync --refresh --needed --noconfirm qt5-virtualkeyboard packagekit-qt5 dolphin konsole kcalc kate spectacle kdialog
+pacman -Syu --needed --noconfirm xorg-server
+pacman -Syu --needed --noconfirm xf86-video-intel vulkan-intel
+pacman -Syu --needed --noconfirm plasma-meta
+pacman -Syu --needed --noconfirm qt5-virtualkeyboard packagekit-qt5 dolphin konsole kcalc kate spectacle kdialog
 
 echo 'Configuring SDDM'
 mkdir -p /etc/sddm.conf.d
@@ -110,9 +115,9 @@ sleep 1
 
 ## task 06: system configuration
 echo 'Installing additional packages'
-pacman --sync --refresh --needed --noconfirm $pkg_utils
-pacman --sync --refresh --needed --noconfirm $pkg_multimedia
-pacman --sync --refresh --needed --noconfirm $pkg_apps
+pacman -Syu --needed --noconfirm $pkg_utils
+pacman -Syu --needed --noconfirm $pkg_multimedia
+pacman -Syu --needed --noconfirm $pkg_apps
 sleep 1
 
 echo 'Configuring firewall'

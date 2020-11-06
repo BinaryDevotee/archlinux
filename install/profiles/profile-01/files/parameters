@@ -14,6 +14,10 @@ group_name='atrodrig'
 host_name='atrodrig-t470s'
 user_home="/home/$user_name"
 
+# wifi settings
+ssid_name='BinaryDevotee_5G'
+ssid_pass='asdfg123258'
+
 # libvirt parameters
 img_path='/data/VirtualMachines/images'
 iso_path='/data/VirtualMachines/iso'
@@ -27,19 +31,36 @@ pkg_hardware='
   tlp
   tlp-rdw'
 
-pkg_utils='
-  bat
+pkg_de='
+  plasma-meta'
+
+pkg_de_addons='
+  qt5-virtualkeyboard
+  qt5-tools
+  packagekit-qt5
+  dolphin
+  konsole
+  kcalc
+  kate
+  spectacle
+  kdialog
+  kwallet'
+
+pkg_sys_utils='
   ebtables
   firewalld
+  ipset
+  nfs-utils
+  networkmanager-openvpn
+  openvpn'
+
+pkg_usr_utils='
+  bat
   git
   htop
-  ipset
   keychain
   man
   neofetch
-  nfs-utils
-  networkmanager-openvpn
-  openvpn
   tmux
   wget
   zsh
@@ -48,10 +69,10 @@ pkg_utils='
   zsh-syntax-highlighting'
 
 pkg_multimedia='
-  mpv
   libva-intel-driver
   libva-mesa-driver
   libva-utils
+  mpv
   pulseaudio-bluetooth'
 
 pkg_apps='
