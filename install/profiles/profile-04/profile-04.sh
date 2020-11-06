@@ -9,7 +9,7 @@ mkfs.f2fs -f /dev/disk/by-partlabel/ARCH_OS -l ARCH_OS
 mount -L ARCH_OS /mnt && mkdir -p /mnt/boot
 mount -L BOOT /mnt/boot 
  
-pacstrap /mnt base base-devel linux linux-lts linux-firmware intel-ucode vim neovim iwd openssh f2fs-tools
+pacstrap /mnt base base-devel linux linux-lts linux-firmware intel-ucode vim iwd networkmanager openssh f2fs-tools
 genfstab -L /mnt >> /mnt/etc/fstab
  
 arch-chroot /mnt bootctl --path=/boot install

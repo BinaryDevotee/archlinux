@@ -15,8 +15,8 @@ host_name='atrodrig-t470s'
 user_home="/home/$user_name"
 
 # wifi settings
-ssid_name='BinaryDevotee_5G'
-ssid_pass='asdfg123258'
+ssid_name='my-ssid'
+ssid_pass='my-pass'
 
 # libvirt parameters
 img_path='/data/VirtualMachines/images'

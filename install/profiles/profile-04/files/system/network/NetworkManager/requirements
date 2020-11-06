@@ -1,4 +1,0 @@
-In this configuration, the following packages are required to use NetworkManager:
-
-- dhclient
-- openresolv
